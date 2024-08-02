@@ -8,10 +8,10 @@ import NumberTicker from "@/components/magicui/number-ticker";
 
 const CryptoCard = ({ image, name} : any) => {
     return(
-        <div className='w-[200px] h-[70px] border-1 border-white p-4 rounded-xl drop-shadow-lg bg-white text-black'>
-            <div className='w-full flex'>
+        <div className='w-full border-1 border-white px-2 py-2 rounded-xl drop-shadow-lg bg-white text-black'>
+            <div className='w-full text-center items-center justify-center align-middle flex'>
                 <Image src={image} alt="test" height={50} width={50} className='rounded-full' />
-                <div className='w-full flex-col mt-2 text-center ml-4'>
+                <div className='w-full flex-col text-center ml-2'>
                     <h1 className='text-xl font-medium'>{name}</h1>
                 </div>
             </div>
@@ -22,10 +22,11 @@ const CryptoCard = ({ image, name} : any) => {
 const cryptoSupportData = [
     {"image": "/images/btc.png", "name":"BITCOIN"},
     {"image": "/images/ether.png", "name":"ETHEREUM"},
-    {"image": "/images/tron.png", "name":"TETHER"},
+    {"image": "/images/celo.png", "name":"CELO"},
     {"image": "/images/matic.png", "name":"POLYGON"},
-    {"image": "/images/ada.png", "name":"CARDANA"},
-    {"image": "/images/trx.png", "name":"TRON"},
+    {"image": "/images/mode.png", "name":"MODE"},
+    {"image": "/images/base.png", "name":"BASE"},
+    {"image": "/images/optimism.png", "name":"OPTIMISM"},
     {"image": "/images/bnb.png", "name":"BINANCE"},
     {"image": "/images/uniswap.png", "name":"UNISWAP"},
 ]

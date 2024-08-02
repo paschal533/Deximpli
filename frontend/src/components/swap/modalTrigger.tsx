@@ -3,13 +3,14 @@ import { Card } from '../ui/card'
 import { CloudIcon } from 'lucide-react'
 import { Separator } from '../ui/separator'
 import Modal from '../mondal'
-import { IntegrationModalBody } from './mondal-body'
+import TokenModal from './tokenModal'
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
 
-const IntegrationTrigger = ({ children, title }: { children: ReactNode, title : string }) => {
-  const placeholders = [
-    "Search name of token",
-    "Paste address of token",
+const IntegrationTrigger = ({ children, title, selectToken, type }: { children: ReactNode, title : string, selectToken? : any, type : string }) => {
+
+  const placeholdersNetwork = [
+    "Search name of network",
+    "Paste address of network",
   ];
  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,21 +20,38 @@ const IntegrationTrigger = ({ children, title }: { children: ReactNode, title : 
     e.preventDefault();
     console.log("submitted");
   };
-  return (
-    <Modal
-      title={title}
-      type="Integration"
-      trigger={children}
-    >
-      <PlaceholdersAndVanishInput
-        placeholders={placeholders}
-        onChange={handleChange}
-        onSubmit={onSubmit}
-      />
-      <Separator orientation="horizontal" />
-       
-    </Modal>
-  )
+    switch (type) {
+      case 'token':
+        return (
+          <Modal
+              title={title}
+              type="Integration"
+              trigger={children}
+            > 
+               <TokenModal selectToken={selectToken} />  
+            </Modal>
+        )
+      case 'network':
+        return (
+          <Modal
+              title={title}
+              type="Integration"
+              trigger={children}
+            >
+              
+              <PlaceholdersAndVanishInput
+                placeholders={placeholdersNetwork}
+                onChange={handleChange}
+                onSubmit={onSubmit}
+              />
+              <Separator orientation="horizontal" />
+              
+            </Modal>
+        )
+      default:
+        return <></>
+    }
+     
 }
 
 export default IntegrationTrigger
