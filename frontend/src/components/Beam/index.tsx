@@ -4,6 +4,14 @@ import React, { forwardRef, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import Image from "next/image";
+import Op from "../../../public/images/optimism.png"
+import mode from "../../../public/images/mode.png"
+import celo from "../../../public/images/celo.png"
+import base from "../../../public/images/base.png"
+import logo from "../../../public/images/logo-tab.png"
+import eth from "../../../public/images/eth.png"
+import binace from "../../../public/images/bnb.png"
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -42,29 +50,29 @@ export function AnimatedBeamDemo() {
       <div className="flex size-full flex-col max-w-lg max-h-[200px] items-stretch justify-between gap-10">
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div1Ref}>
-            <Icons.googleDrive />
+            <Image src={Op} height={30} width={30} alt="network"  />
           </Circle>
           <Circle ref={div5Ref}>
-            <Icons.googleDocs />
+            <Image src={celo} height={30} width={30} alt="network"  />
           </Circle>
         </div>
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div2Ref}>
-            <Icons.notion />
+            <Image src={base} height={30} width={30} alt="network"  />
           </Circle>
           <Circle ref={div4Ref} className="size-16">
-            <Icons.openai />
+            <Image src={logo} height={30} width={30} alt="network"  />
           </Circle>
           <Circle ref={div6Ref}>
-            <Icons.zapier />
+            <Image src={binace} height={30} width={30} alt="network"  />
           </Circle>
         </div>
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div3Ref}>
-            <Icons.whatsapp />
+            <Image src={mode} height={30} width={30} alt="network"  />
           </Circle>
           <Circle ref={div7Ref}>
-            <Icons.messenger />
+           <Image src={eth} height={30} width={30} alt="network"  />
           </Circle>
         </div>
       </div>

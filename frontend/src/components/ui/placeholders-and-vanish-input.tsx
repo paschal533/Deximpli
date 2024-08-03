@@ -6,6 +6,8 @@ import { SwapContext } from "@/context/swap-provider";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react"
 import Image from "next/image";
+import { DropdownMenuTrigger, DropdownMenu } from '../ui/dropdown-menu';
+import DropDown from "../infobar/drop-down"
 
 export function PlaceholdersAndVanishInput({
   placeholders,
@@ -210,14 +212,18 @@ export function PlaceholdersAndVanishInput({
         )}
       />
 
-      <button
-        disabled={!value}
-        type="submit"
+      <div
         className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-white bg-white dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center"
       >
-        <Image src={network.image} height={20} width={20} alt="network" />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+          <Image src={network.image} height={20} width={20} alt="network" />
+         </DropdownMenuTrigger>
+         <DropDown />
+
+      </DropdownMenu>
           
-      </button>
+      </div>
 
       <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
         <Search className="ml-1 text-neutral-500" />

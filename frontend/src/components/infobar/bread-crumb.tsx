@@ -24,10 +24,16 @@ const BreadCrumb = (props: Props) => {
           ? 'Manage your account settings, preferences and integrations'
           : page == 'swap'
           ? 'Swap anytime, anywhere.'
+          : page == 'liquidity'
+          ? 'Add liquidity, remove liquidity and earn rewards.'
           : page == 'loan'
+          ? 'Borrow crypto and pay back later.'
+          : page == 'stake'
+          ? 'Stake crypto tokens and earn rewards'
+          : page == 'transfer'
           ? 'Send Assets to anyone around the world using their email address.'
           : page == 'farm'
-          ? 'Connect third-party applications into Deximpli'
+          ? 'Stake crypto tokens in the liquidity pool and earn rewards'
           : 'Modify settings'}
       </p>
     </div>

@@ -6,6 +6,7 @@ import { ThemeProvider } from '@/context/them-provider'
 import { WalletContextProvider } from '@/context/wallet-connect'
 import '@rainbow-me/rainbowkit/styles.css';
 import { SwapProvider } from '@/context/swap-provider'
+import { LiquidityProvider } from '@/context/liquidity-provider'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,6 +27,7 @@ export default function RootLayout({
             <body className={jakarta.className}>
             <WalletContextProvider>
               <SwapProvider>
+                <LiquidityProvider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="light"
@@ -35,6 +37,7 @@ export default function RootLayout({
                 <Toaster />
                 <ToastContainer />
               </ThemeProvider>
+              </LiquidityProvider>
               </SwapProvider>
               </WalletContextProvider>
             </body>

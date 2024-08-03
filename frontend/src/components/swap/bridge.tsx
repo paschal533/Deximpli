@@ -1,12 +1,15 @@
 "use client"
-import React from 'react'
+import React, { useContext } from 'react'
 import { ArrowDownUp, ChevronDown } from "lucide-react"
 import { ConnectBTN } from '../customWallet'
 import Image from 'next/image'
 import EthImage from "../../../public/images/eth.png"
 import IntegrationTrigger from './modalTrigger'
+import { SwapContext } from '@/context/swap-provider'
+import { Button, CircularProgress } from '@mui/material';
 
 function Bridge() {
+  const { address, loading } = useContext(SwapContext)
 
   return (
     <div>
@@ -44,7 +47,9 @@ function Bridge() {
           </div>
         </section>
         <section>
-            <ConnectBTN />
+            {!address ? <ConnectBTN /> : <Button disabled={true} className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full" fullWidth onClick={() => {}}>
+                {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : `Bridge`}
+              </Button>}
         </section>
     </div>
     </div>

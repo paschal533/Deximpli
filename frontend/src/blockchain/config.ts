@@ -4,6 +4,7 @@ import {
   getDefaultConfig,
   Chain,
 } from '@rainbow-me/rainbowkit';
+import { http, createConfig } from '@wagmi/core'
 import {
   mainnet,
   polygon,
@@ -12,6 +13,7 @@ import {
   base,
   zora,
   goerli,
+  sepolia,
 } from 'wagmi/chains';
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
@@ -23,9 +25,17 @@ export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 export const config = getDefaultConfig({
   appName: 'Deximpli',
   projectId: projectId,
-  chains: [mainnet, goerli, polygon, optimism, arbitrum, base, zora],
+  chains: [mainnet, goerli, polygon, optimism, arbitrum, base, zora, sepolia],
   ssr: true,
   storage: createStorage({
     storage: cookieStorage
   })
+})
+
+export const configConnect = createConfig({
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
 })

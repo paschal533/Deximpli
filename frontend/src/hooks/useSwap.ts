@@ -14,13 +14,20 @@ import FactoryAddress from '@/contracts/PairFactory-address.json';
 import AMMRouterAddress from '@/contracts/AMMRouter-address.json';
 import AMMRouterABI from '@/contracts/AMMRouter.json';
 import { SuppotedTokens } from "@/utils/Tokens";
+import { useEthersProvider, useEthersSigner } from '@/components/Wallet';
+import { useAccount } from 'wagmi'
+import { getBalance } from '@wagmi/core'
+import { configConnect } from '@/blockchain/config';
+import { isAddress } from "viem";
 
 const useSwap = () => {
     const MODE_SWAP = 0;
     const MODE_WRAP = 1;
     const MODE_UNWRAP = 2;
+    const { address, isConnecting, connector: activeConnector, } = useAccount()
+    const provider = useEthersProvider()
+    const signer = useEthersSigner()
     const [tokenIndex, setTokenIndex] = useState(0); // 0 = tokenA, 1 = tokenB
-    const { active, account, library } = useWeb3React();
     const [tokens, setTokens] = useState<any>([]);
     const [tokenA, setTokenA] = useState<any>({
         address: WETH.address,
@@ -45,6 +52,7 @@ const useSwap = () => {
     const [graph, setGraph] = useState(false);
     const [tokensSelected, setTokensSelected] = useState(false);
     const [swapMode, setSwapMode] = useState(MODE_SWAP);
+    const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
     const [network, setNetwork] = useState<any>({"image": "/images/base.png", "name":"BASE"},)
 
     const selectToken = (_tokenA : any, _tokenB : any) => {
@@ -90,14 +98,14 @@ const useSwap = () => {
     const initGraph = useCallback(async () => {
         setLoading(true);
         try {
-          let factory = new ethers.Contract(FactoryAddress.address, FactoryABI.abi, localProvider);
+          let factory = new ethers.Contract(FactoryAddress.address, FactoryABI.abi, provider);
           const nPairs = await factory.allPairsLength();
           const edgeList = [];
     
           // Iterate through all pairs to get the edges of the graph
           for (let i = 0; i < nPairs; i++) {
             let pairAddress = await factory.allPairs(i);
-            let tokenPair = new ethers.Contract(pairAddress, TokenPairABI, localProvider);
+            let tokenPair = new ethers.Contract(pairAddress, TokenPairABI, provider);
             let _tokenA = await getTokenInfo(await tokenPair.tokenA());
             let _tokenB = await getTokenInfo(await tokenPair.tokenB());
             edgeList.push([_tokenA, _tokenB]);
@@ -119,22 +127,22 @@ const useSwap = () => {
           console.error(error);
         }
         setLoading(false);
-    }, []);
+    }, [provider]);
 
     const checkAllowance = useCallback(async () => {
         if (!tokensSelected || isETH(tokenA)) {
           return;
         }
         try {
-          const _token = new ethers.Contract(tokenA.address, ERC20ABI, library.getSigner());
-          let _allow = await _token.allowance(account, AMMRouterAddress.address);
+          const _token = new ethers.Contract(tokenA.address, ERC20ABI, signer);
+          let _allow = await _token.allowance(address, AMMRouterAddress.address);
           _allow = Number(ethers.utils.formatUnits(_allow, tokenA.decimals));
           setAllowAmount(_allow);
         } catch (error) {
           toast.error(getErrorMessage(error, "Cannot check allowances!"));
           console.error(error);
         }
-    }, [account, library, tokenA, tokensSelected]);
+    }, [address, signer, tokenA, tokensSelected]);
 
     const getBalances = useCallback(async () => {
         if (!tokensSelected) {
@@ -142,36 +150,44 @@ const useSwap = () => {
         }
         try {
           if (isETH(tokenA)) {
-            const _balanceA = await library.getBalance(account);
+              const balance = await getBalance(configConnect, {
+                //@ts-ignore
+                address: address, 
+            })
+            const _balanceA = balance.value
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
           } else {
-            const _tokenA = new ethers.Contract(tokenA.address, ERC20ABI, library.getSigner());
-            const _balanceA = await _tokenA.balanceOf(account);
+            const _tokenA = new ethers.Contract(tokenA.address, ERC20ABI, signer);
+            const _balanceA = await _tokenA.balanceOf(address);
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA, tokenA.decimals)));
           }
           if (isETH(tokenB)) {
-            const _balanceB = await library.getBalance(account);
+            const balance = await getBalance(configConnect, {
+              //@ts-ignore
+              address: address, 
+          })
+          const _balanceB = balance.value
             setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
           } else {
-            const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, library.getSigner());
-            const _balanceB = await _tokenB.balanceOf(account);
+            const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, signer);
+            const _balanceB = await _tokenB.balanceOf(address);
             setBalanceB(Number(ethers.utils.formatUnits(_balanceB, tokenB.decimals)));
           }
         } catch (error) {
           toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
           console.error(error);
         }
-      }, [account, library, tokenA, tokenB, tokensSelected]);
+      }, [address, signer, tokenA, tokenB, tokensSelected]);
     
       useEffect(() => {
         if (!graph && swapMode === MODE_SWAP) {
           initGraph();
         }
-        if (active) {
+        if (address) {
           checkAllowance();
           getBalances();
         }
-      }, [active, checkAllowance, getBalances, graph, initGraph, swapMode]);
+      }, [address, checkAllowance, getBalances, graph, initGraph, swapMode]);
     
       const handleMax = () => {
         setAmountA(balanceA);
@@ -214,7 +230,7 @@ const useSwap = () => {
         }
         setLoading(true);
         try {
-          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, localProvider);
+          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, provider);
           let max = Number.MIN_SAFE_INTEGER;
           let _bestPath = null;
           for (const path of paths) {
@@ -244,7 +260,7 @@ const useSwap = () => {
         }
         setLoading(true);
         try {
-          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, localProvider);
+          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, provider);
           let min = Number.MAX_SAFE_INTEGER;
           let _bestPath = null;
           for (const path of paths) {
@@ -274,6 +290,7 @@ const useSwap = () => {
           return result;
         }
         for (const address of path) {
+          //@ts-ignore
           result += ` => ${graph.get(address).token.symbol}`;
         }
         return result.substring(4);
@@ -284,7 +301,9 @@ const useSwap = () => {
         let oldPrice = 1;
         for (let i = 0; i < path.length - 1; i++) {
           const [reserveA, reserveB,] = await ammRouter.getReserves(path[i], path[i + 1]);
+          //@ts-ignore
           oldPrice = oldPrice * Number(ethers.utils.formatUnits(reserveA, graph.get(path[i]).token.decimals))
+          //@ts-ignore
             / Number(ethers.utils.formatUnits(reserveB, graph.get(path[i + 1]).token.decimals));
         }
         setPriceImpact(100 * (newPrice / oldPrice - 1));
@@ -293,7 +312,7 @@ const useSwap = () => {
       const handleApprove = async () => {
         setLoading(true);
         try {
-          const _token = new ethers.Contract(tokenA.address, ERC20ABI, library.getSigner());
+          const _token = new ethers.Contract(tokenA.address, ERC20ABI, signer);
           const _allowAmount = ethers.utils.parseUnits(toString(amountA), tokenA.decimals);
           const tx = await _token.approve(AMMRouterAddress.address, _allowAmount);
           await tx.wait();
@@ -308,19 +327,20 @@ const useSwap = () => {
       const handleSwap = async () => {
         setLoading(true);
         try {
-          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, library.getSigner());
+          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, signer);
+          //@ts-ignore
           const deadline = parseInt(new Date().getTime() / 1000) + 30;
           let tx;
           if (isETH(tokenA)) {
             tx = await (tokenIndex === indexTokenA ?
               ammRouter.swapExactETHForTokens(
                 ethers.utils.parseUnits(toString(amountB * 0.9), tokenB.decimals),
-                bestPath, account, deadline, {
+                bestPath, address, deadline, {
                 value: ethers.utils.parseUnits(toString(amountA), tokenA.decimals)
               }) :
               ammRouter.swapETHForExactTokens(
                 ethers.utils.parseUnits(toString(amountB), tokenB.decimals),
-                bestPath, account, deadline, {
+                bestPath, address, deadline, {
                 value: ethers.utils.parseUnits(toString(amountA * 1.1), tokenA.decimals)
               }));
           } else if (isETH(tokenB)) {
@@ -328,22 +348,22 @@ const useSwap = () => {
               ammRouter.swapExactTokensForETH(
                 ethers.utils.parseUnits(toString(amountA), tokenA.decimals),
                 ethers.utils.parseUnits(toString(amountB * 0.9), tokenB.decimals),
-                bestPath, account, deadline) :
+                bestPath, address, deadline) :
               ammRouter.swapTokensForExactETH(
                 ethers.utils.parseUnits(toString(amountB), tokenB.decimals),
                 ethers.utils.parseUnits(toString(amountA * 1.1), tokenA.decimals),
-                bestPath, account, deadline
+                bestPath, address, deadline
               ));
           } else {
             tx = await (tokenIndex === indexTokenA ?
               ammRouter.swapExactTokensForTokens(
                 ethers.utils.parseUnits(toString(amountA), tokenA.decimals),
                 ethers.utils.parseUnits(toString(amountB * 0.9), tokenB.decimals),  // Min acceptable receiving amount
-                bestPath, account, deadline) :
+                bestPath, isAddress, deadline) :
               ammRouter.swapTokensForExactTokens(
                 ethers.utils.parseUnits(toString(amountB), tokenB.decimals),
                 ethers.utils.parseUnits(toString(amountA * 1.1), tokenA.decimals),  // Max acceptable spending amount
-                bestPath, account, deadline
+                bestPath, address, deadline
               ));
           }
           await tx.wait();
@@ -362,7 +382,7 @@ const useSwap = () => {
       const handleWrap = async () => {
         setLoading(true);
         try {
-          const contract = new ethers.Contract(WETH.address, WETHABI.abi, library.getSigner());
+          const contract = new ethers.Contract(WETH.address, WETHABI.abi, signer);
           const tx = await (swapMode === MODE_WRAP ?
             contract.deposit({ value: ethers.utils.parseUnits(toString(amountA)) }) :
             contract.withdraw(ethers.utils.parseUnits(toString(amountA))));
@@ -380,6 +400,7 @@ const useSwap = () => {
       }
 
       const getSupportedTokens = useCallback(async (erc20Only? : any, customTokens? : any) => {
+        setLoadingTokens(true)
         if (customTokens && customTokens.length > 0) {
           setTokens(customTokens);
           return;
@@ -402,10 +423,12 @@ const useSwap = () => {
           // Remove the first element since ETH is not an ERC20 token
           _tokens.shift();
         }
-        for (let address of SuppotedTokens) {
-          _tokens.push(await getTokenInfo(address));
+        for (let TokenAddress of SuppotedTokens) {
+          //@ts-ignore
+          _tokens.push(await getTokenInfo(TokenAddress));
         }
         setTokens(_tokens);
+        setLoadingTokens(false)
         //@ts-ignore
       }, []);
     
@@ -470,11 +493,13 @@ const useSwap = () => {
     MODE_UNWRAP,
     tokenIndex, 
     setTokenIndex,
-    active,
+    address,
     isETH,
     tokens,
     network,
-    setNetwork
+    setNetwork,
+    loadingTokens,
+    setTokens,
   };
 };
 

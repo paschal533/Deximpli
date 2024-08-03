@@ -102,21 +102,19 @@ export const FadeInDiv = ({
   return (
     <div className="relative w-full h-full">
       {tabs.map((tab, idx) => (
-        <motion.div
+        <div
           key={tab.value}
-          layoutId={tab.value}
+          //layoutId={tab.value}
           style={{
             zIndex: -idx,
             opacity: idx < 3 ? 1 - idx * 0.1 : 0,
-             
+            display: isActive(tab) ?  "block" : "none",
           }}
-          animate={{
-            y: isActive(tab) ? 0 : 0,
-          }}
+          
           className={cn("w-full h-full absolute", className)}
         >
           {tab.content}
-        </motion.div>
+        </div>
       ))}
     </div>
   );
