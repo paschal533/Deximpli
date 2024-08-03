@@ -8,6 +8,11 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.1",
+    "chai": "^4.3.7",
+    "ethers": "^5.7.1"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.6"
