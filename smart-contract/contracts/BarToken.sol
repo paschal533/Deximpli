@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
  */
 contract BarToken is ERC20 {
     constructor() ERC20("Bar Token", "BAR") {
-        // Initial supply of 1,000,000,000 tokens are given to msg.sender
+        // Initial supply of 1,000,000,000 tokens are given to deployer
         _mint(msg.sender, 1e27);
     }
 }

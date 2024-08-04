@@ -91,10 +91,9 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
   }, [address, signer, pair]);
 
   useEffect(() => {
-    const pairAddress = pair
-    if (pairAddress && address) {
-      if (!pair) {
-        setTokenInfo(pairAddress);
+    if (liquidityPair && address) {
+      if (!liquidityPair) {
+        setTokenInfo(liquidityPair);
       } else {
         getBalance();
         getTotalSupply();
@@ -102,7 +101,7 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
         getAllowance();
       }
     }
-  }, [pair, address, setTokenInfo, getBalance, getReserves, getAllowance, getTotalSupply]);
+  }, [liquidityPair, address, setTokenInfo, getBalance, getReserves, getAllowance, getTotalSupply]);
 
   const handleChange = (e : any) => {
     let tmpVal = e.target.value ? e.target.value : 0;
@@ -211,21 +210,21 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
         <Typography>{(reserveB * amount / totalSupply).toFixed(2)}</Typography>
       </Grid>
     </Grid>
-    <Grid container>
+    <Grid container className='mt-2'>
       <Grid item xs={6}>
-        <Button disabled={allowAmount >= amount} fullWidth onClick={handleApprove}>
-          {loading && allowAmount < amount ? <CircularProgress sx={{ color: 'white' }} /> : "Enable"}
+        <Button className='text-[#D7009A] rounded-md !bg-white font-semibold' disabled={allowAmount >= amount} fullWidth onClick={handleApprove}>
+          {loading && allowAmount < amount ? <CircularProgress sx={{ color: '#D7009A' }} /> : "Enable"}
         </Button>
       </Grid>
       <Grid item xs={6}>
-        <Button disabled={amount <= 0 || allowAmount < amount} fullWidth
+        <Button className='text-[#D7009A] rounded-md !bg-white font-semibold' disabled={amount <= 0 || allowAmount < amount} fullWidth
           onClick={handleRemoveLiquidity}>
-          {loading && allowAmount >= amount ? <CircularProgress sx={{ color: 'white' }} /> : "Remove"}
+          {loading && allowAmount >= amount ? <CircularProgress sx={{ color: '#D7009A' }} /> : "Remove"}
         </Button>
       </Grid>
     </Grid>
-  </> : <Typography>No pair specified!</Typography>
-  ) : <Typography>Please connect wallet first!</Typography>);
+  </> : <h1 className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full">No pair specified!</h1>
+  ) : <h1 className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full">Please connect wallet first!</h1>);
 };
 
 export default RemoveLiquidity;

@@ -1,12 +1,12 @@
-import { localProvider } from '../components/Wallet';
+import { localProvider } from '@/components/Wallet';
 import { ethers } from 'ethers';
 import { ERC20ABI } from './ERC20ABI';
-import FactoryABI from '../contracts/PairFactory.json';
-import FactoryAddress from '../contracts/PairFactory-address.json';
+import FactoryABI from '@/contracts/PairFactory.json';
+import FactoryAddress from '@/contracts/PairFactory-address.json';
 import { TokenPairABI } from './TokenPairABI';
-import WETH from '../contracts/WETH-address.json';
+import WETH from '@/contracts/WETH-address.json';
 
-export const getTokenInfo = async (address) => {
+export const getTokenInfo = async (address : any) => {
   let name = "Unknown", symbol = "Unknown", logo = "", decimals = 18;
   if (address === WETH.address) {
     // Shortcut for Ether
@@ -46,11 +46,11 @@ export const ERROR_CODE = {
   'ACTION_REJECTED': 'Action rejected by user!'
 }
 
-export const getErrorMessage = (error, defaultMessage) => {
+export const getErrorMessage = (error : any, defaultMessage : string) => {
   return ERROR_CODE[error.code] || defaultMessage;
 }
 
-export const toString = x => {
+export const toString = (x : any) => {
   if (Math.abs(x) < 1.0) {
     let e = parseInt(x.toString().split('e-')[1]);
     if (e) {
@@ -69,19 +69,19 @@ export const toString = x => {
 }
 
 // Check if a token object is ETH
-export const isETH = token => {
+export const isETH = (token : any)=> {
   return token.address === WETH.address && token.symbol === 'ETH';
 }
 
 // Format BigNumber interst to percentage
-export const formatInterest = interest => {
+export const formatInterest = (interest : any) => {
   return (Number(ethers.utils.formatEther(interest)) * 100).toFixed(2) + "%";
 }
 
-export const formatEtherOrNA = value => {
+export const formatEtherOrNA = (value : any) => {
   return value ? Number(ethers.utils.formatEther(value)).toFixed(2) : 'N/A';
 }
 
-export const boolOrNA = value => {
+export const boolOrNA = (value : any) => {
   return value === undefined || value === null ? 'N/A' : value.toString();
 }

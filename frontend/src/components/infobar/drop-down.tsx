@@ -6,10 +6,10 @@ import { useSwitchChain } from 'wagmi'
 
 function DropDown() {
   const cryptoSupportData = [
-        {"image": "/images/base.png", "name":"BASE", "id":"8453"},
-        {"image": "/images/optimism.png", "name":"OPTIMISM", "id":"10"},
-        {"image": "/images/celo.png", "name":"CELO", "id":"42220"},
-        {"image": "/images/mode.png", "name":"MODE", "id":"34443"},
+        {"image": "/images/base.png", "name":"BASE", "id":8453},
+        {"image": "/images/optimism.png", "name":"OPTIMISM", "id":10},
+        {"image": "/images/celo.png", "name":"CELO", "id":42220},
+        {"image": "/images/mode.png", "name":"MODE", "id":34443},
   ]
 
   const { setNetwork } = useContext(SwapContext);

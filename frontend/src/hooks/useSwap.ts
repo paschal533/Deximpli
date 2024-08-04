@@ -19,6 +19,7 @@ import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
 import { isAddress } from "viem";
+import { localProvider } from "@/components/Wallet"
 
 const useSwap = () => {
     const MODE_SWAP = 0;
@@ -53,6 +54,7 @@ const useSwap = () => {
     const [tokensSelected, setTokensSelected] = useState(false);
     const [swapMode, setSwapMode] = useState(MODE_SWAP);
     const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
+    const [loadingTokenPrice, setLoadingTokenPrice] = useState<boolean>(false)
     const [network, setNetwork] = useState<any>({"image": "/images/base.png", "name":"BASE"},)
 
     const selectToken = (_tokenA : any, _tokenB : any) => {
@@ -124,7 +126,7 @@ const useSwap = () => {
           }
         } catch (error) {
           toast.error("Cannot initiate data for swapping!")
-          console.error(error);
+          console.log(error);
         }
         setLoading(false);
     }, [provider]);
@@ -175,7 +177,7 @@ const useSwap = () => {
           }
         } catch (error) {
           toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
-          console.error(error);
+          console.log(error);
         }
       }, [address, signer, tokenA, tokenB, tokensSelected]);
     
@@ -229,6 +231,7 @@ const useSwap = () => {
           return;
         }
         setLoading(true);
+        console.log("loading")
         try {
           const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, provider);
           let max = Number.MIN_SAFE_INTEGER;

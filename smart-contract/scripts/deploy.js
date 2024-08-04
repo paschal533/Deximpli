@@ -100,7 +100,7 @@ async function main() {
 }
 
 function saveContractToFrontend(contract, name) {
-  const contractsDir = __dirname + "/../src/frontend/contracts";
+  const contractsDir = __dirname + "/../../frontend/src/contracts";
   if (!fs.existsSync(contractsDir)) {
     fs.mkdirSync(contractsDir);
   }

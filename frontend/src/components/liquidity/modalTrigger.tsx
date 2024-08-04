@@ -6,7 +6,7 @@ import Modal from '../mondal'
 import TokenModal from './tokenModal'
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
 import RemoveLiquidity from './remove-liquidity'
-import AddLiquidity from './add-liquidity'
+import AdjustLiquidity from './adjust-liquidity'
 
 const IntegrationTrigger = ({ children, title, selectToken, type }: { children: ReactNode, title : string, selectToken? : any, type : string }) => {
 
@@ -51,7 +51,7 @@ const IntegrationTrigger = ({ children, title, selectToken, type }: { children: 
               type="Integration"
               trigger={children}
             >
-              <AddLiquidity liquidityPair={selectToken} />
+              <AdjustLiquidity liquidityPair={selectToken} />
               
             </Modal>
         )

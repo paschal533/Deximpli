@@ -13,8 +13,6 @@ function Swap() {
 
   const {
     selectToken,
-    initGraph,
-    checkAllowance,
     handleApprove,
     handleChange,
     handleSwap,
@@ -118,9 +116,10 @@ function Swap() {
           </div>
         </section>
         <CssBaseline />
+        <div className="mb-4">
         <Collapse in={price > 0 || swapMode !== MODE_SWAP}>
-          {swapMode === MODE_SWAP ? <div className='h-full !font-medium !mt-2 bg-cream !mb-2 px-4 py-2 rounded-xl  w-full'>
-            <Grid container justifyContent="space-between mt-2" alignItems="center">
+          {swapMode === MODE_SWAP ? !loading ?  <div className='h-full !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>
+            <Grid container justifyContent="space-between" alignItems="center">
               <Grid item sx={{ fontWeight: 600 }}>Price</Grid>
               <Grid item>{price.toFixed(2)} {tokenA.symbol} per {tokenB.symbol}</Grid>
             </Grid>
@@ -132,10 +131,12 @@ function Swap() {
               <Grid item sx={{ fontWeight: 600 }}>Path</Grid>
               <Grid item>{printSwapPath(bestPath)}</Grid>
             </Grid>
-          </div> : <h1 className='h-[50px] !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>
+          </div> : <div className='h-full !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'><CircularProgress sx={{ color: '#D7009A' }} /></div> : 
+          <h1 className='h-[50px] !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>
             The exchange rate from {swapMode === MODE_WRAP ? "ETH to WETH" : "WETH to ETH"} is always 1:1
           </h1>}
         </Collapse>
+        </div>
         <section>
         {address ? <Grid item xs={12}>
             {allowAmount < amountA && swapMode === MODE_SWAP && !isETH(tokenA) ?

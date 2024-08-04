@@ -4,17 +4,26 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npx hardhat run scripts/deploy.js --network localhost",
+    "mine": "npx hardhat mine $npm_config_blocks --network localhost",
+    "price-oracle-update": "npx hardhat run scripts/priceOracleUpdate.js --network"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.1",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
     "chai": "^4.3.7",
-    "ethers": "^5.7.1"
+    "dotenv": "^16.4.5",
+    "ethers": "^5.7.1",
+    "json-rpc-engine": "^6.1.0",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.6"
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "hardhat": "^2.12.6"
   }
 }

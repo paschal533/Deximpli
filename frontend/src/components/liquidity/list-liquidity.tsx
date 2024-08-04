@@ -29,11 +29,13 @@ function ListLiquidity() {
             key={`liq-list-${index}`}
             expanded={expanded === item.pairAddress}
             onChange={handleClick(item)}
-            sx={{ border: 2, my: 1 }}>
+            className='bg-cream font-semibold rounded-lg'
+            sx={{ my: 1 }}>
+
             <AccordionSummary expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
             >
-              <Grid container direction="column">
+              <Grid container direction="column" className=''>
                 <Grid item>
                   {item.tokenA.symbol}/{item.tokenB.symbol}
                 </Grid>
@@ -69,14 +71,14 @@ function ListLiquidity() {
                 <Typography>Share of pool</Typography>
                 <Typography>{`${sharePercent.toFixed(2)} %`}</Typography>
               </Grid>
-              <Grid container justifyContent="center" spacing={2}>
+              <Grid container className='mt-2' justifyContent="center" spacing={2}>
                 <Grid item xs={6}>
                 <IntegrationTrigger
                 title={"Remove Liquidity"}
                 type="Remove-pair"
                 selectToken={item.pairAddress}
               >
-                   <Button fullWidth onClick={
+                   <Button className='text-[#D7009A] rounded-md bg-white font-semibold' fullWidth onClick={
                     () => {/*navigate(`remove?pair=${item.pairAddress}`)*/}
                   }>Remove</Button>
               </IntegrationTrigger>
@@ -87,7 +89,7 @@ function ListLiquidity() {
                 type="add-liquidity"
                 selectToken={item.pairAddress}
               >
-                   <Button fullWidth onClick={
+                   <Button fullWidth className='text-[#D7009A] rounded-md bg-white font-semibold' onClick={
                     () => {/*navigate(`remove?pair=${item.pairAddress}`)*/}
                   }>Add</Button>
               </IntegrationTrigger>
