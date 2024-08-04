@@ -70,10 +70,11 @@ function Swap() {
   return (
     <div>
     <div className='md:w-[500px] md:p-0 p-4 w-[90vw]'>
-        <section className='h-[100px] bg-cream rounded-xl px-4 py-2  w-full'>
+        <section className='h-[110px] bg-cream rounded-xl px-4 py-2  w-full'>
           <h1 className='text-md font-semibold text-gray-500'>Sell</h1>
           <div className='flex justify-between mt-2 w-full'>
             <input type='number' id="tokenA" value={amountA == 0 ? '' : amountA} onChange={handleChange} onBlur={() => swapMode === MODE_SWAP && getReceivingAmount()} placeholder='0' className='bg-none text-3xl w-1/2 font-bold placeholder:text-slate-500 placeholder:font-bold placeholder:text-3xl bg-transparent outline-none border-none' />
+            <div>
             <IntegrationTrigger
                 title={"Select a token"}
                 type="token"
@@ -84,9 +85,18 @@ function Swap() {
                  <div 
                    onClick={() => { setTokenIndex(indexTokenA); }}
                 >
-                  {Object.keys(tokenA).length === 0 ? (<div  className='!w-full cursor-pointer bg-white flex justify-between font-bold py-1 px-2 rounded-2xl'><Image src={EthImage} alt="eth" width={25} height={20} /> ETH <ChevronDown className='mt-[1px]' /></div>) : (<div  className='!w-full cursor-pointer bg-white flex justify-between font-bold py-1 px-2 rounded-2xl'><Image src={tokenA.logo ? tokenA.logo : network.image} className="mr-1" alt="eth" width={25} height={20} /> {tokenA.symbol}<ChevronDown className='mt-[1px]' /></div>)}</div>
+                  {Object.keys(tokenA).length === 0 ? (<div  className='!w-full !max-w-[118px] right-0 float-end cursor-pointer bg-white flex justify-between font-bold py-1 px-2 rounded-2xl'><Image src={EthImage} alt="eth" width={25} height={20} /> ETH <ChevronDown className='mt-[1px]' /></div>) : (<div  className='!w-full !max-w-[118px] float-end !right-0 cursor-pointer bg-white flex justify-between font-bold py-1 px-2 rounded-2xl'><Image src={tokenA.logo ? tokenA.logo : network.image} className="mr-1" alt="eth" width={25} height={20} /> {tokenA.symbol}<ChevronDown className='mt-[1px]' /></div>)}</div>
               </IntegrationTrigger>
+                </div>
           </div>
+          {address && <div className="w-full flex mt-2 !float-end space-x-2 !right-0 justify-end">
+                <Grid item>
+                  <p className="text-xs">Balance: {balanceA.toFixed(1)}</p>
+                </Grid>
+                <Grid item>
+                  <div className="text-xs cursor-pointer float-end font-semibold text-[#D7009A]" onClick={() => handleMax()} >Max</div>
+                </Grid>
+                </div>}
         </section>
         <div className="w-full justify-center items-center flex">
           <section
@@ -97,10 +107,11 @@ function Swap() {
             {hoverOnSwitch ? <Repeat /> : <ArrowDownUp />}
           </section>
         </div>
-        <section className='h-[100px] mt-2 bg-cream  px-4 py-2 rounded-xl  w-full'>
+        <section className='h-[110px] mt-2 bg-cream  px-4 py-2 rounded-xl  w-full'>
         <h1 className='text-md font-semibold text-gray-500'>Buy</h1>
           <div className='flex justify-between mt-2 w-full'>
             <input type='number' id="tokenB" value={amountB == 0 ? '' : amountB} onChange={handleChange} onBlur={() => swapMode === MODE_SWAP && getSpendingAmount()} placeholder='0' className='bg-none w-1/2 text-3xl font-bold placeholder:text-slate-500 placeholder:font-bold placeholder:text-3xl bg-transparent outline-none border-none' />
+            <div>
             <IntegrationTrigger
                 title={"Select a token"}
                 type="token"
@@ -111,9 +122,18 @@ function Swap() {
                 <div 
                   onClick={() => {setTokenIndex(indexTokenB)}}
                 >
-                  {Object.keys(tokenB).length === 0 ? (<div className='!w-36 cursor-pointer bg-[#D7009A] text-white flex justify-between font-bold py-1 px-2 rounded-2xl'> Select token <ChevronDown className='mt-[1px]' /></div>) : (<div  className='!w-full cursor-pointer bg-white flex justify-between font-bold py-1 px-2 rounded-2xl'><Image src={tokenB.logo ? tokenB.logo : network.image} alt="eth" width={25} height={20} className="mr-1" /> {tokenB.symbol}<ChevronDown className='mt-[1px]' /></div>)}</div>
+                  {Object.keys(tokenB).length === 0 ? (<div 
+                  className='!w-36 cursor-pointer bg-[#D7009A] text-white flex justify-between font-bold py-1 px-2 rounded-2xl'> 
+                    Select token <ChevronDown className='mt-[1px]' /></div>) : 
+                    (<div 
+                    className='!w-full !max-w-[118px] right-0 float-end cursor-pointer bg-white flex justify-between font-bold py-1 px-2 rounded-2xl'>
+                      <Image src={tokenB.logo ? tokenB.logo : network.image} alt="eth" width={25} height={20} className="mr-1" /> 
+                      {tokenB.symbol}<ChevronDown className='mt-[1px]' />
+                      </div>)}</div>
               </IntegrationTrigger>
+            </div>
           </div>
+          {address && <p className="mt-2 float-end text-xs">Balance: {balanceB.toFixed(1)}</p>}
         </section>
         <CssBaseline />
         <div className="mb-4">
@@ -140,9 +160,11 @@ function Swap() {
         <section>
         {address ? <Grid item xs={12}>
             {allowAmount < amountA && swapMode === MODE_SWAP && !isETH(tokenA) ?
-              <Button className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full" fullWidth onClick={() => handleApprove()}>
+              <Button className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex !bg-cream rounded-xl mt-2  w-full" fullWidth onClick={() => handleApprove()}>
                 {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : `Enable ${tokenA.symbol}`}
-              </Button> : <Button className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full" disabled={amountA <= 0 || amountB <= 0 || balanceA < amountA || loading}
+              </Button> : <Button 
+              className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex !bg-cream rounded-xl  w-full" 
+              disabled={amountA <= 0 || amountB <= 0 || balanceA < amountA || loading}
                 fullWidth onClick={() => swapMode === MODE_SWAP ? handleSwap() : handleWrap()}>
                 {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : (
                   balanceA < amountA ? "Insufficient Balance" : (swapMode === MODE_SWAP ? "Swap" :

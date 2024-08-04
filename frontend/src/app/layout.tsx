@@ -9,6 +9,7 @@ import { SwapProvider } from '@/context/swap-provider'
 import { LiquidityProvider } from '@/context/liquidity-provider'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { StakeProvider } from '@/context/stake-provider'
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'] })
 
@@ -28,6 +29,7 @@ export default function RootLayout({
             <WalletContextProvider>
               <SwapProvider>
                 <LiquidityProvider>
+                  <StakeProvider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="light"
@@ -37,6 +39,7 @@ export default function RootLayout({
                 <Toaster />
                 <ToastContainer />
               </ThemeProvider>
+              </StakeProvider>
               </LiquidityProvider>
               </SwapProvider>
               </WalletContextProvider>

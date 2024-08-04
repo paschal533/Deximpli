@@ -14,7 +14,7 @@ function LiquidityTabs() {
           ),
         },
         {
-          title: "Liquidity List",
+          title: "Your Liquidity List",
           value: "Liquidity List",
           content: (
               <ListLiquidity />

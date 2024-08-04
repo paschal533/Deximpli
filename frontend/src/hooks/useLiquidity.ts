@@ -17,7 +17,7 @@ import { localProvider } from "@/components/Wallet"
 
 const useLiquidity = () => {
   const { address, isConnecting, connector: activeConnector, } = useAccount()
-  const provider = localProvider //useEthersProvider()
+  const provider = useEthersProvider()
   const signer = useEthersSigner()
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);

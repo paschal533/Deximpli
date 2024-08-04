@@ -34,7 +34,7 @@ function Bridge() {
         <div className="w-full justify-center items-center flex"><section className='bg-cream justify-center border-white absolute rounded-xl border-4 items-center flex w-10 h-10'><ArrowDownUp /></section></div>
         <section className='h-[100px] mt-2 bg-cream  px-4 py-2 rounded-xl  w-full'>
         <div className='text-md h-4 font-semibold text-gray-500'></div>
-          <div className='flex justify-between mt-2 w-full'>
+          <div className='flex mb justify-between mt-2 w-full'>
             <input type='number' placeholder='0' className='bg-none w-1/2 text-3xl font-bold placeholder:text-slate-500 placeholder:font-bold placeholder:text-3xl bg-transparent outline-none border-none' />
             <IntegrationTrigger
                 title={"Select a Network"}
@@ -47,7 +47,7 @@ function Bridge() {
           </div>
         </section>
         <section>
-            {!address ? <ConnectBTN /> : <Button disabled={true} className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full" fullWidth onClick={() => {}}>
+            {!address ? <ConnectBTN /> : <Button disabled={true} className="h-[50px] font-semibold text-[#D7009A] mt-2 justify-center items-center flex !bg-cream rounded-xl  w-full" fullWidth onClick={() => {}}>
                 {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : `Bridge`}
               </Button>}
         </section>
