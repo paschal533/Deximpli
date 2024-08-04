@@ -10,7 +10,7 @@ import { StakeContext } from '@/context/stake-provider';
 import { SwapContext } from '@/context/swap-provider'
 
 const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
-  const { address, signer } = useContext(StakeContext)
+  const { address, signer, provider } = useContext(StakeContext)
   const { network } = useContext(SwapContext)
   const [rewardToken, setRewardToken] = useState<any>({});
   const [stakingPoolAddress, setStakingPoolAddress] = useState('');
@@ -24,7 +24,7 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
     }
     try {
       const stakingPool = new ethers.Contract(poolAddress, StakingPoolABI, signer);
-      const _rewardToken = await getTokenInfo(await stakingPool.rewardToken());
+      const _rewardToken = await getTokenInfo(await stakingPool.rewardToken(), provider);
       setRewardToken(_rewardToken);
       setStakingPoolAddress(poolAddress);
     } catch (error) {
@@ -79,10 +79,8 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
   }, [address, poolAddress, getBalance, getRewardToken]);
 
   if (!address) {
-    return <Typography>Please connect to a wallet to supply reward</Typography>;
-  } else if (Object.keys(rewardToken).length === 0) {
-    return <Typography>Please provide valid "pool" search parameter in URL</Typography>
-  }
+    return <p className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>Please connect to a wallet to supply reward</p>;
+  } 
 
   return <div>
     <Grid item>
@@ -94,13 +92,13 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
       <Divider />
       <div>
          
-          <div className='w-full p-2 mt-2 flex items-center justify-between'>
+          <div className='w-full p-2 mt-2 flex-col items-center'>
                  
-                 <p className='font-semibold text-md'>Reward Per Block</p>
+                 <p className='font-semibold text-md'>Reward Per Block :</p>
  
                  <input type='number' id="reward_per_block"  value={amount == 0 ? '' : amount} 
-                 onChange={handleChange} placeholder={`0 (${rewardToken.symbol})`} 
-                 className='bg-none w-1/2 text-xl font-bold placeholder:text-slate-500 placeholder:font-bold placeholder:text-xl  bg-cream shadow-sm p-2 rounded-lg outline-none border-none' />
+                 onChange={handleChange} placeholder={`enter reward token (${rewardToken.symbol}) amount`} 
+                 className='bg-none w-full mt-2 text-lg font-normal placeholder:text-slate-500 placeholder:font-normal placeholder:text-lg  bg-cream shadow-sm p-2 rounded-lg outline-none border-none' />
              </div>
         <div className='w-full flex justify-between pr-2 items-center'>
         <p className='p-2 font-semibold'>Balance of {rewardToken.symbol}:</p>
@@ -109,7 +107,7 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
         <Grid item xs={4}></Grid>
         <div className='w-full p-2'>
           <Button className='bg-cream text-[#D7009A] rounded-lg' disabled={amount <= 0} fullWidth onClick={() => handleSupply()}>
-            {loading ? <CircularProgress sx={{ color: 'white' }} /> : "Supply"}
+            {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : "Supply"}
           </Button>
         </div>
         <Grid item xs={4}></Grid>

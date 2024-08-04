@@ -41,11 +41,11 @@ function ListLiquidity() {
                 </Grid>
                 <Grid
                   container
-                  justifyContent="space-between"
+                  justifyContent=""
                   alignItems="center"
-                  spacing={5}
+                  spacing={1}
                 >
-                  <Grid item>Liquidity Pool Token Balance</Grid>
+                  <Grid item>Liquidity Pool Token Balance :</Grid>
                   <Grid item>{item.balance.toFixed(2)}</Grid>
                 </Grid>
               </Grid>

@@ -34,7 +34,7 @@ export const config = getDefaultConfig({
 })
 
 export const configConnect = createConfig({
-  chains: [mainnet, sepolia, optimism],
+  chains: [mainnet, sepolia, optimism, localhost],
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),

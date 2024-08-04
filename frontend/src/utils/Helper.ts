@@ -1,4 +1,3 @@
-import { localProvider } from '@/components/Wallet';
 import { ethers } from 'ethers';
 import { ERC20ABI } from './ERC20ABI';
 import FactoryABI from '@/contracts/PairFactory.json';
@@ -6,34 +5,33 @@ import FactoryAddress from '@/contracts/PairFactory-address.json';
 import { TokenPairABI } from './TokenPairABI';
 import WETH from '@/contracts/WETH-address.json';
 
-export const getTokenInfo = async (address : any) => {
+export const getTokenInfo = async (address : any, provider : any) => {
   let name = "Unknown", symbol = "Unknown", logo = "", decimals = 18;
   if (address === WETH.address) {
     // Shortcut for Ether
     return { address, name: "Ether", symbol: "ETH", decimals: 18 };
   }
   try {
-    const contract = new ethers.Contract(address, ERC20ABI, localProvider);
+    const contract = new ethers.Contract(address, ERC20ABI, provider);
     name = await contract.name();
     symbol = await contract.symbol();
     decimals = await contract.decimals();
-    logo = await contract.logo();
   } catch (error) {
     console.error(error);
   }
   return { address, name, symbol, decimals, logo };
 }
 
-export const getLiquidityPools = async () => {
+export const getLiquidityPools = async (provider : any) => {
   const pools = new Map();
   try {
-    const factory = new ethers.Contract(FactoryAddress.address, FactoryABI.abi, localProvider);
+    const factory = new ethers.Contract(FactoryAddress.address, FactoryABI.abi, provider);
     const nPairs = await factory.allPairsLength();
     for (let i = 0; i < nPairs; i++) {
       const address = await factory.allPairs(i);
-      const tokenPair = new ethers.Contract(address, TokenPairABI, localProvider);
-      const tokenA = await getTokenInfo(await tokenPair.tokenA());
-      const tokenB = await getTokenInfo(await tokenPair.tokenB());
+      const tokenPair = new ethers.Contract(address, TokenPairABI, provider);
+      const tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
+      const tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
       pools.set(address, { tokenA, tokenB });
     }
   } catch (error) {

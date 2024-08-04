@@ -35,7 +35,7 @@ function ListStake() {
           key={`staking-pool-${index}`}
           expanded={expanded === item.address}
           onChange={handleClick(item)}
-          className='h-full p-4 bg-cream rounded-xl w-full shadow-lg'
+          className='h-full p-4 bg-cream !border-t-0 !border-none  rounded-xl w-full shadow-md'
           sx={{ my: 1 }}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
              <div className='flex-col w-full'>
@@ -50,7 +50,7 @@ function ListStake() {
             </div>
             <div className='mt-2 font-semibold text-md'>
               <Grid item>{currentBlock >= item.rewardEndBlock ? "Expired" :
-                (currentBlock >= item.rewardStartBlock ? `Ends in ${item.rewardEndBlock - currentBlock} block(s)` :
+                (currentBlock >= item.rewardStartBlock ? `Ends in ${Number(item.rewardEndBlock) - Number(currentBlock)} block(s)` :
                   `Starts in ${item.rewardStartBlock - currentBlock} block(s)`)}</Grid>
             </div>
              </div>

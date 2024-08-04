@@ -5,18 +5,18 @@ import ListStake from './list-stake';
 
 function StakeTabs() {
     const tabs = [
+      {
+        title: "Staking Pool List",
+        value: "stake list",
+        content: (
+           <ListStake />
+        ),
+      },
         {
           title: "Create Staking Pool",
           value: "create",
           content: (
              <CreateStake />
-          ),
-        },
-        {
-          title: "Your Staked List",
-          value: "stake list",
-          content: (
-             <ListStake />
           ),
         },
       ];

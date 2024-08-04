@@ -12,7 +12,7 @@ import { SwapContext } from '@/context/swap-provider'
 
 const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
   const theme = useTheme();
-  const { address, signer } = useContext(StakeContext)
+  const { address, signer, provider } = useContext(StakeContext)
   const { network } = useContext(SwapContext)
   const [stakingPoolAddress, setStakingPoolAddress] = useState('');
   const [stakedToken, setStakedToken] = useState<any>({});
@@ -26,7 +26,7 @@ const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
     }
     try {
       const stakingPool = new ethers.Contract(poolAddress, StakingPoolABI, signer);
-      const _stakedToken = await getTokenInfo(await stakingPool.stakedToken());
+      const _stakedToken = await getTokenInfo(await stakingPool.stakedToken(), provider);
       setStakedToken(_stakedToken);
       setStakingPoolAddress(poolAddress);
     } catch (error) {
@@ -85,37 +85,43 @@ const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
   }, [address, poolAddress, getStakedAmount, getStakedToken,]);
 
   if (!address) {
-    return <Typography>Please connect to a wallet to stake</Typography>;
-  } else if (Object.keys(stakedToken).length === 0) {
-    return <Typography>Please provide valid "pool" search parameter in URL</Typography>
-  }
+    return <p className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>Please connect to a wallet to stake</p>;
+  } 
 
   return <Grid container>
     <Grid item>
-      <Grid container columnGap={12}>
+      <Grid container columnGap={12} className='mb-4'>
         <Grid item>
           <Typography sx={{ mt: 1 }}>Withdraw Staked Token ({stakedToken.symbol})</Typography>
         </Grid>
       </Grid>
-      <Divider  />
-      <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <Typography sx={{ mt: 2 }}>Amount to Withdraw</Typography>
-        </Grid>
-        <Grid item xs={8}>
-          <TextField label={`Please enter the amount of ${stakedToken.symbol} to withdraw`} value={amount}
-            onChange={handleChange} fullWidth />
-          <Typography>Staked {stakedToken.symbol}: {stakedAmount}</Typography>
-          <Button sx={{ fontSize: 12, padding: '0px' }} onClick={() => setAmount(stakedAmount)} >Max</Button>
-        </Grid>
-        <Grid item xs={4} />
-        <Grid item xs={4}>
-          <Button disabled={amount <= 0 || amount > stakedAmount} fullWidth onClick={() => handleWithdraw()}>
-            {loading ? <CircularProgress sx={{ color: 'white' }} /> : (amount > stakedAmount ? "Withdraw too much!" : "Withdraw")}
+      <Divider />
+      <div>
+         
+          <div className='w-full p-2 mt-2 flex-col items-center'>
+                 
+                 <p className='font-semibold text-md'>Amount to Withdraw :</p>
+ 
+                 <input type='number' id="reward_per_block"  value={amount == 0 ? '' : amount} 
+                 onChange={handleChange} placeholder={`enter the amount of ${stakedToken.symbol} to withdraw`} 
+                 className='bg-none w-full mt-2 text-lg font-normal placeholder:text-slate-500 placeholder:font-normal placeholder:text-lg  bg-cream shadow-sm p-2 rounded-lg outline-none border-none' />
+             </div>
+        <div className='w-full flex justify-between pr-2 items-center'>
+        <p className='p-2 font-semibold'>Staked {stakedToken.symbol}:</p>
+        <div>
+        <span className='font-medium'> {stakedAmount}</span>
+        <div className="text-xs cursor-pointer float-end font-semibold text-[#D7009A]" onClick={() => setAmount(stakedAmount)} >Max</div>
+        </div>
+        </div>
+        <Grid item xs={4}></Grid>
+        <div className='w-full space-x-2 p-2'>
+          <Button className='bg-cream w-1/2 text-[#D7009A] rounded-lg' disabled={amount <= 0 || amount > stakedAmount} fullWidth onClick={() => handleWithdraw()} >
+          {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : (amount > stakedAmount ? "Withdraw too much!" : "Withdraw")}
           </Button>
-        </Grid>
-        <Grid item xs={4} />
-      </Grid>
+  
+        </div>
+        <Grid item xs={4}></Grid>
+      </div>
     </Grid>
   </Grid >;
 }

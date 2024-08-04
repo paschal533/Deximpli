@@ -75,6 +75,7 @@ const useStake = () => {
       setRewardPerBlock(100);
       setStartBlock(0);
       setEndBlock(0);
+      getStakingPools();
       await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
     } catch (error) {
       toast.error("Cannot create staking pool!");
@@ -89,7 +90,7 @@ const useStake = () => {
       // Get all staking pool addresses from staking pool manager
       const stakingPools = await stakingPoolManager.getAllStakingPools();
       const pools = [];
-      const liquidityPools = await getLiquidityPools();
+      const liquidityPools = await getLiquidityPools(provider);
       for (const address of stakingPools) {
         const stakingPool = new ethers.Contract(address, StakingPoolABI, signer);
         const stakedTokenAddress = await stakingPool.stakedToken();
@@ -100,8 +101,8 @@ const useStake = () => {
         const rewardStartBlock = await stakingPool.rewardStartBlock();
         const rewardEndBlock = await stakingPool.rewardEndBlock();
         const rewardPerBlock = await stakingPool.rewardPerBlock();
-        const stakedToken = await getTokenInfo(stakedTokenAddress);
-        const rewardToken = await getTokenInfo(await stakingPool.rewardToken());
+        const stakedToken = await getTokenInfo(stakedTokenAddress, provider);
+        const rewardToken = await getTokenInfo(await stakingPool.rewardToken(), provider);
         const stakedAmount = (await stakingPool.userInfo(address)).amount;
         const stakedTotal = await stakingPool.stakedTokenSupply();
         const pendingReward = await stakingPool.getPendingReward(address);
@@ -142,8 +143,6 @@ const useStake = () => {
   const handleHideExpired = (event : any) => {
     setHideExpired(event.target.checked);
   }
-
-  console.log(currentBlock);
 
   useEffect(() => {
     const init = async () => {

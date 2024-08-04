@@ -152,13 +152,13 @@ function Swap() {
               <Grid item>{printSwapPath(bestPath)}</Grid>
             </Grid>
           </div> : <div className='h-full !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'><CircularProgress sx={{ color: '#D7009A' }} /></div> : 
-          <h1 className='h-[50px] !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>
+          <h1 className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>
             The exchange rate from {swapMode === MODE_WRAP ? "ETH to WETH" : "WETH to ETH"} is always 1:1
           </h1>}
         </Collapse>
         </div>
         <section>
-        {address ? <Grid item xs={12}>
+        {address ? <div>
             {allowAmount < amountA && swapMode === MODE_SWAP && !isETH(tokenA) ?
               <Button className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex !bg-cream rounded-xl mt-2  w-full" fullWidth onClick={() => handleApprove()}>
                 {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : `Enable ${tokenA.symbol}`}
@@ -170,7 +170,7 @@ function Swap() {
                   balanceA < amountA ? "Insufficient Balance" : (swapMode === MODE_SWAP ? "Swap" :
                     (swapMode === MODE_WRAP ? "Wrap" : "Unwrap")))}
               </Button>}
-          </Grid> : <ConnectBTN />}
+          </div> : <ConnectBTN />}
         </section>
     </div>
     </div>

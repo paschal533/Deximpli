@@ -20,6 +20,17 @@ import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
 import { isAddress } from "viem";
 import { localProvider } from "@/components/Wallet"
+import {
+  mainnet,
+  polygon,
+  optimism,
+  arbitrum,
+  base,
+  zora,
+  goerli,
+  sepolia,
+  localhost
+} from 'wagmi/chains';
 
 const useSwap = () => {
     const MODE_SWAP = 0;
@@ -108,8 +119,8 @@ const useSwap = () => {
           for (let i = 0; i < nPairs; i++) {
             let pairAddress = await factory.allPairs(i);
             let tokenPair = new ethers.Contract(pairAddress, TokenPairABI, provider);
-            let _tokenA = await getTokenInfo(await tokenPair.tokenA());
-            let _tokenB = await getTokenInfo(await tokenPair.tokenB());
+            let _tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
+            let _tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
             edgeList.push([_tokenA, _tokenB]);
           }
           // Make the graph with edge list
@@ -154,7 +165,8 @@ const useSwap = () => {
           if (isETH(tokenA)) {
               const balance = await getBalance(configConnect, {
                 //@ts-ignore
-                address: address, 
+                address: address,
+                chainId: localhost.id, 
             })
             const _balanceA = balance.value
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
@@ -167,8 +179,9 @@ const useSwap = () => {
             const balance = await getBalance(configConnect, {
               //@ts-ignore
               address: address, 
+              chainId: localhost.id,
           })
-          const _balanceB = balance.value
+            const _balanceB = balance.value
             setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
           } else {
             const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, signer);
@@ -428,7 +441,9 @@ const useSwap = () => {
         }
         for (let TokenAddress of SuppotedTokens) {
           //@ts-ignore
-          _tokens.push(await getTokenInfo(TokenAddress));
+          _tokens.push(await getTokenInfo(TokenAddress, provider));
+          console.log("hello")
+          console.log(await getTokenInfo(TokenAddress, provider))
         }
         setTokens(_tokens);
         setLoadingTokens(false)
