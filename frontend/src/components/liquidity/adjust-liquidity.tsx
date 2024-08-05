@@ -28,9 +28,8 @@ import { configConnect } from '@/blockchain/config';
 import { localProvider } from "@/components/Wallet"
 
 function AdjustLiquidity({ liquidityPair } : { liquidityPair? : any }) {
-  const { network } = useContext(SwapContext)
+  const { network, provider } = useContext(SwapContext)
   const { address, isConnecting, connector: activeConnector, } = useAccount()
-  const provider = localProvider //useEthersProvider()
   const signer = useEthersSigner()
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
@@ -73,8 +72,8 @@ function AdjustLiquidity({ liquidityPair } : { liquidityPair? : any }) {
         let tmpBalance = await tokenPair.balanceOf(address);
         let balance = tmpBalance / 10 ** 18; // We know the decimals of LP Tokens are all 18 for the DEX
         if (balance > 0) {
-          let tokenA = await getTokenInfo(await tokenPair.tokenA());
-          let tokenB = await getTokenInfo(await tokenPair.tokenB());
+          let tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
+          let tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
           tmpLiq.push({ pairAddress, balance, tokenA, tokenB });
         }
       }
@@ -104,8 +103,8 @@ function AdjustLiquidity({ liquidityPair } : { liquidityPair? : any }) {
     }
     try {
       const tokenPair = new ethers.Contract(pairAddress, TokenPairABI, signer);
-      const _tokenA = await getTokenInfo(await tokenPair.tokenA());
-      const _tokenB = await getTokenInfo(await tokenPair.tokenB());
+      const _tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
+      const _tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
       setTokenA(_tokenA);
       setTokenB(_tokenB);
       setTokenSelected(true);

@@ -1,5 +1,4 @@
-"use client"
-import React, { useContext, useEffect, useState, useCallback } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SwapContext } from '@/context/swap-provider';
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
 import { Separator } from '../ui/separator'
@@ -12,26 +11,22 @@ import {
   } from "@mui/material";
 import Image from 'next/image';
 import { DialogClose } from "../ui/dialog"
-import { SuppotedTokens } from "@/utils/Tokens";
-import { getTokenInfo } from '@/utils/Helper';
-import WETH from '@/contracts/WETH-address.json'
-import { StakeContext } from '@/context/stake-provider';
+import { FarmContext } from '@/context/farm-provider';
 
-function TokenModal({ selectToken, erc20Only, customTokens }: { selectToken : any, erc20Only? : any, customTokens? : any }) {
-    const { network } =  useContext(SwapContext)
-    const { tokens, loadingTokens } = useContext(StakeContext);
+function PoolModal({ selectToken, erc20Only, customTokens }: { selectToken : any, erc20Only? : any, customTokens? : any }) {
+    const {  network, loadingTokens } =  useContext(SwapContext)
+    const {tokens, LoadingPoolTokens} = useContext(FarmContext)
     const [tokenList, setTokenList] = useState<Array<any>>(tokens)
 
     const placeholders = [
-        "Search name of token",
-        "Paste address of token",
+        "Search name of Pool",
+        "Paste address of Pool",
     ];
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setTokenList(tokens.filter((token : any) => {
             return token.name?.toLowerCase().includes(e.target.value.toLowerCase()) || token.address?.toLowerCase().includes(e.target.value.toLowerCase());
         }))
       };
-  
        
   return (
     <div>
@@ -46,7 +41,7 @@ function TokenModal({ selectToken, erc20Only, customTokens }: { selectToken : an
     </div>
     <div>
       <List className='w-full h-full overflow-y-auto overflow-x-hidden'>
-        {!loadingTokens ? tokenList.length > 0 ? tokenList?.map((item : any, index : any) =>
+        {!LoadingPoolTokens ? tokenList.length > 0 ? tokenList.map((item : any, index : any) =>
          <DialogClose key={index} className='flex-col w-full'>
           <ListItem
             className='hover:bg-cream space-x-2 rounded-lg w-full flex'
@@ -67,4 +62,4 @@ function TokenModal({ selectToken, erc20Only, customTokens }: { selectToken : an
   )
 }
 
-export default TokenModal
+export default PoolModal

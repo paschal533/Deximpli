@@ -1,4 +1,3 @@
-"use client"
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { buildGraphFromEdges, findAllPaths } from '@/utils/Graph';
@@ -37,7 +36,8 @@ const useSwap = () => {
     const MODE_WRAP = 1;
     const MODE_UNWRAP = 2;
     const { address, isConnecting, connector: activeConnector, } = useAccount()
-    const provider = useEthersProvider()
+    const chainId = localhost.id
+    const provider = useEthersProvider({chainId})
     const signer = useEthersSigner()
     const [tokenIndex, setTokenIndex] = useState(0); // 0 = tokenA, 1 = tokenB
     const [tokens, setTokens] = useState<any>([]);
@@ -166,7 +166,7 @@ const useSwap = () => {
               const balance = await getBalance(configConnect, {
                 //@ts-ignore
                 address: address,
-                chainId: localhost.id, 
+                chainId: chainId, 
             })
             const _balanceA = balance.value
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
@@ -179,7 +179,7 @@ const useSwap = () => {
             const balance = await getBalance(configConnect, {
               //@ts-ignore
               address: address, 
-              chainId: localhost.id,
+              chainId: chainId,
           })
             const _balanceB = balance.value
             setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
@@ -442,8 +442,6 @@ const useSwap = () => {
         for (let TokenAddress of SuppotedTokens) {
           //@ts-ignore
           _tokens.push(await getTokenInfo(TokenAddress, provider));
-          console.log("hello")
-          console.log(await getTokenInfo(TokenAddress, provider))
         }
         setTokens(_tokens);
         setLoadingTokens(false)
@@ -518,6 +516,8 @@ const useSwap = () => {
     setNetwork,
     loadingTokens,
     setTokens,
+    provider,
+    setLoadingTokens,
   };
 };
 

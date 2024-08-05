@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { Button, Divider, Grid, Typography, Box, Slider, TextField, IconButton, CircularProgress } from '@mui/material';
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -13,11 +13,12 @@ import { getErrorMessage, getTokenInfo, toString, isETH } from '@/utils/Helper';
 import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
+import { SwapContext } from '@/context/swap-provider';
 
 
 const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
   const { address, isConnecting, connector: activeConnector, } = useAccount()
-  const provider = useEthersProvider()
+  const { provider } = useContext(SwapContext);
   const signer = useEthersSigner()
   const [tokenA, setTokenA] = useState<any>({});
   const [tokenB, setTokenB] = useState<any>({});
@@ -34,8 +35,8 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
   const setTokenInfo = useCallback(async (pairAddress : any) => {
     try {
       const tokenPair = new ethers.Contract(pairAddress, TokenPairABI, signer);
-      const _tokenA = await getTokenInfo(await tokenPair.tokenA());
-      const _tokenB = await getTokenInfo(await tokenPair.tokenB());
+      const _tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
+      const _tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
       setTokenA(_tokenA);
       setTokenB(_tokenB);
       setPair(pairAddress);

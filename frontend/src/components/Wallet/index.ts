@@ -1,4 +1,3 @@
-"use client"
 import { ethers } from 'ethers';
 import { providers } from 'ethers'
 import { useMemo } from 'react'

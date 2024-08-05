@@ -1,5 +1,4 @@
-"use client"
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { useWeb3React } from "@web3-react/core";
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
@@ -8,15 +7,19 @@ import ManagerABI from '@/contracts/StakingPoolManager.json';
 import { toString } from '@/utils/Helper';
 import { StakingPoolABI } from '@/utils/StakingPoolABI';
 import { getTokenInfo, getLiquidityPools } from '@/utils/Helper';
-import { useEthersProvider, useEthersSigner } from '@/components/Wallet';
+import { localProvider, useEthersProvider, useEthersSigner } from '@/components/Wallet';
 import { getBlockNumber } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
+import WETH from '@/contracts/WETH-address.json';
+import WETHABI from '@/contracts/WETH.json';
+import { SuppotedTokens } from "@/utils/Tokens";
+import { SwapContext } from '@/context/swap-provider';
 
 const useStake = () => {
     const { address, isConnecting, connector: activeConnector, } = useAccount()
-    const provider = useEthersProvider()
+    const { provider} = useContext(SwapContext)
     const signer = useEthersSigner()
   const [stakedToken, setStakedToken] = useState<any>({});
   const [rewardToken, setRewardToken] = useState<any>({});
@@ -32,6 +35,8 @@ const useStake = () => {
   const [expanded, setExpanded] = useState(false);
   const [stakingPools, setStakingPools] = useState<any>([]);
   const [hideExpired, setHideExpired] = useState(false);
+  const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
+  const [tokens, setTokens] = useState<any>([])
 
   const handleSelectToken = (token : any) => {
     if (tokenIndex === indexStakedToken) {
@@ -67,7 +72,10 @@ const useStake = () => {
     try {
       const stakingPoolManager = new ethers.Contract(ManagerAddress.address, ManagerABI.abi, signer);
       const tx = await stakingPoolManager.createStakingPool(stakedToken.address, rewardToken.address,
-        ethers.utils.parseUnits(toString(rewardPerBlock), rewardToken.decimals), startBlock, endBlock);
+        ethers.utils.parseUnits(toString(rewardPerBlock), rewardToken.decimals), startBlock, endBlock, {
+          maxFeePerGas: ethers.utils.parseUnits('60', 'gwei'), // Set this to a higher value
+          maxPriorityFeePerGas: ethers.utils.parseUnits('2', 'gwei') 
+        });
       await tx.wait();
       toast.info(`Staking pool is created successfully! Transaction Hash: ${tx.hash}`);
       setStakedToken({});
@@ -144,15 +152,45 @@ const useStake = () => {
     setHideExpired(event.target.checked);
   }
 
+  const getSupportedTokens = useCallback(async (erc20Only? : boolean) => {
+    setLoadingTokens(true)
+    // The native coin of EVM and its wrapped form
+    const _tokens = [{
+      address: WETH.address,
+      name: 'Ether',
+      symbol: 'ETH',
+      logo: "/images/eth.png",
+      decimals: 18
+    }, {
+      address: WETH.address,
+      name: 'Wrapped ETH',
+      symbol: 'WETH',
+      logo: "/images/eth.png",
+      decimals: 18
+    }];
+    if (erc20Only) {
+      // Remove the first element since ETH is not an ERC20 token
+      _tokens.shift();
+    }
+    for (let TokenAddress of SuppotedTokens) {
+      //@ts-ignore
+      _tokens.push(await getTokenInfo(TokenAddress, provider));
+    }
+    setTokens(_tokens);
+    setLoadingTokens(false)
+    //@ts-ignore
+  }, []);
+
   useEffect(() => {
     const init = async () => {
-      if (address) {
+      if (address && signer) {
         await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
         getStakingPools();
       }
+      getSupportedTokens(true);
     }
     init()
-  }, [address, getStakingPools]);
+  }, [address, getStakingPools, signer]);
 
     return {
         address,
@@ -176,6 +214,8 @@ const useStake = () => {
         expanded,
         handleClick,
         handleHarvest,
+        tokens,
+        loadingTokens
     }
 }
 

@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
 import FactoryABI from '@/contracts/PairFactory.json';
@@ -14,10 +14,11 @@ import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
 import { localProvider } from "@/components/Wallet"
+import { SwapContext } from '@/context/swap-provider';
 
 const useLiquidity = () => {
   const { address, isConnecting, connector: activeConnector, } = useAccount()
-  const provider = useEthersProvider()
+  const { provider } = useContext(SwapContext)
   const signer = useEthersSigner()
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
