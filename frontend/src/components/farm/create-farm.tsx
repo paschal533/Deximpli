@@ -1,7 +1,7 @@
 "use client"
 import React, { useContext } from 'react'
 import { FarmContext } from '@/context/farm-provider';
-import { Button, Divider, Grid, Typography, TextField, IconButton, CircularProgress } from '@mui/material';
+import { Button, Divider, Grid, Typography, TextField, IconButton, CircularProgress, Alert } from '@mui/material';
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import IntegrationTrigger from './modalTrigger'
 import { ArrowDownUp, ChevronDown, Repeat } from "lucide-react"
@@ -32,7 +32,7 @@ function CreateFarmingPool() {
           <div>
             <div className='w-full flex items-center justify-between'>
             <Grid item xs={6}>
-              <p className='font-semibold w-1/2 text-md'>Staked Liquidity</p>
+              <p className='font-semibold w-full text-md'>Staked Liquidity</p>
             </Grid>
             <IntegrationTrigger
                 title={"Select a Liquidity pool"}
@@ -111,8 +111,8 @@ function CreateFarmingPool() {
             <div>
               <h1 className='font-bold mt-4 text-xl'>Note</h1>
               <p className='mt-2 text-md font-medium'>We highly recommend setting block number greater than the current block number {currentBlock}.</p>
-              {startBlock >= endBlock && <p className='mt-2 text-md text-red-400 font-medium'>Start block number should be less than the end block number.</p>}
-              {!tokensSelected && <p className='mt-2 text-red-400 text-md font-medium'>Please select both staked and reward tokens.</p>}
+              {startBlock >= endBlock && <p className='mt-2 text-md text-red-400 font-medium'><Alert severity="warning">Start block number should be less than the end block number.</Alert></p>}
+              {!tokensSelected && <p className='mt-2 text-red-400 text-md font-medium'><Alert severity="warning">Please select both staked and reward tokens.</Alert></p>}
             </div>
             <Grid item xs={4}></Grid>
             <Grid item xs={4}>

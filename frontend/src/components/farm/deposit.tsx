@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect, useCallback, useContext } from 'react';
 import { useWeb3React } from "@web3-react/core";
 import { Button, Divider, Grid, Typography, useTheme, TextField, IconButton, CircularProgress } from '@mui/material';
@@ -131,7 +132,7 @@ const Deposit = ({ poolAddress } : { poolAddress : any}) => {
          
           <div className='w-full p-2 mt-2 flex-col items-center'>
                  
-                 <p className='font-semibold text-md'>Amount to Supply :</p>
+                 <p className='font-semibold text-md'>Amount to Deposit :</p>
  
                  <input type='number' id="reward_per_block"  value={amount == 0 ? '' : amount} 
                  onChange={handleChange} placeholder={`enter staked token (${stakedToken.symbol}) amount`} 

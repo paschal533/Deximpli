@@ -1,3 +1,4 @@
+"use client"
 import React, { useContext, useEffect, useState } from 'react'
 import { SwapContext } from '@/context/swap-provider';
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"

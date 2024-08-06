@@ -66,6 +66,7 @@ const useSwap = () => {
     const [swapMode, setSwapMode] = useState(MODE_SWAP);
     const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
     const [loadingTokenPrice, setLoadingTokenPrice] = useState<boolean>(false)
+    const [userEmail, setUserEmail] = useState<string>("")
     const [network, setNetwork] = useState<any>({"image": "/images/base.png", "name":"BASE"},)
 
     const selectToken = (_tokenA : any, _tokenB : any) => {
@@ -518,6 +519,9 @@ const useSwap = () => {
     setTokens,
     provider,
     setLoadingTokens,
+    signer,
+    userEmail, 
+    setUserEmail
   };
 };
 

@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect, useCallback, useContext } from 'react';
 import { Button, Divider, Grid, Typography, useTheme, TextField, IconButton, CircularProgress } from '@mui/material';
 import { ethers } from 'ethers';

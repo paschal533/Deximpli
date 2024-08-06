@@ -21,7 +21,7 @@ function StakeTabs() {
         },
       ];
   return (
-    <div  className='md:w-[500px] md:p-0 p-4 w-[90vw]'>
+    <div className='!max-w-[1000px] p-4 w-full'>
        <Tabs tabs={tabs} />
     </div>
   )

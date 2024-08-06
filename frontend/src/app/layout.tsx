@@ -11,6 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { StakeProvider } from '@/context/stake-provider'
 import { FarmProvider } from '@/context/farm-provider'
+import { LoanProvider } from '@/context/loan-provider'
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'] })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
                 <LiquidityProvider>
                   <StakeProvider>
                     <FarmProvider>
+                      <LoanProvider>
               <ThemeProvider
                 attribute="class"
                 defaultTheme="light"
@@ -41,6 +43,7 @@ export default function RootLayout({
                 <Toaster />
                 <ToastContainer />
               </ThemeProvider>
+              </LoanProvider>
               </FarmProvider>
               </StakeProvider>
               </LiquidityProvider>

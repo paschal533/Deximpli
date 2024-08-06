@@ -10,7 +10,6 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import IntegrationTrigger from './modalTrigger'
 import { FarmContext } from '@/context/farm-provider';
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '../ui/table';
 
 function ListFarmingPools() {
   const {
@@ -100,23 +99,7 @@ function ListFarmingPools() {
           </AccordionDetails>
         </Accordion>) : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>No Farming Pool Found</p>}
     </> : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Please connect to a wallet to view staking pools.</p>}
-
-    {/*<Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Stake</TableHead>
-          <TableHead>Earn</TableHead>
-          <TableHead>Earned</TableHead>
-          <TableHead>Total Staked</TableHead>
-          <TableHead>Reward Per Block</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Deposit</TableHead>
-          <TableHead>Withdraw</TableHead>
-          <TableHead>Harvest</TableHead>
-          <TableHead>Supply Reward</TableHead>
-        </TableRow>
-      </TableHeader>
-    </Table>*/}
+ 
   </Grid>
   </div>
 )

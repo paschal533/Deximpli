@@ -7,31 +7,15 @@ import ManagerABI from '@/contracts/StakingPoolManager.json';
 import { toString } from '@/utils/Helper';
 import { StakingPoolABI } from '@/utils/StakingPoolABI';
 import { getTokenInfo, getLiquidityPools } from '@/utils/Helper';
-import { useEthersProvider, useEthersSigner } from '@/components/Wallet';
+import { useEthersSigner } from '@/components/Wallet';
 import { getBlockNumber } from '@wagmi/core'
 import { useAccount } from 'wagmi'
-import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
-import { SuppotedTokens } from "@/utils/Tokens";
-import WETH from '@/contracts/WETH-address.json';
-import WETHABI from '@/contracts/WETH.json';
 import { SwapContext } from '@/context/swap-provider';
-import {
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    zora,
-    goerli,
-    sepolia,
-    localhost
-  } from 'wagmi/chains';
 
 const useFarm = () => {
     const { address, isConnecting, connector: activeConnector, } = useAccount()
     const { provider } = useContext(SwapContext)
-    const chainId = localhost.id
     const signer = useEthersSigner()
     const [liquidityPools, setLiquidityPools] = useState(new Map());
   const [stakedToken, setStakedToken] = useState<any>({});

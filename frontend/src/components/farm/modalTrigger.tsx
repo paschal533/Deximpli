@@ -1,3 +1,4 @@
+"use client"
 import React, { ReactNode } from 'react'
 import { Card } from '../ui/card'
 import { CloudIcon } from 'lucide-react'

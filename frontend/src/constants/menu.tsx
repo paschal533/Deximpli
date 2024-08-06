@@ -27,7 +27,7 @@ export const SIDE_BAR_MENU: SIDE_BAR_MENU_PROPS[] = [
   {
     label: 'Email Transfer',
     icon:  <Send className='h-7 w-7 mr-2 text-violet-500'/>,
-    path: 'Transfer',
+    path: 'transfer',
   },
   {
     label: 'Yield Farming',

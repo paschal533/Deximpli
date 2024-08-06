@@ -1,0 +1,12 @@
+{
+  "parts": [
+    {
+      "is_public": false,
+      "regex_def": "\r\nsubject:Change owner to 0x"
+    },
+    {
+      "is_public": true,
+      "regex_def": "[A-Fa-f0-9]+"
+    }
+  ]
+}

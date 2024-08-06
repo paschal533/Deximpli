@@ -24,7 +24,7 @@ function ListStake() {
   } = useContext(StakeContext);
 
   return (
-    <div className='md:w-[500px] w-[90vw]'>
+    <div className='w-full'>
     <Grid container direction="column">
     {address ? <>
       <FormGroup className='!border-b-0 !border-none'>
