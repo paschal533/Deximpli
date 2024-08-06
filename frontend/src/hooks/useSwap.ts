@@ -18,27 +18,14 @@ import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
 import { isAddress } from "viem";
-import { localProvider } from "@/components/Wallet"
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
-  zora,
-  goerli,
-  sepolia,
-  localhost
-} from 'wagmi/chains';
 
 const useSwap = () => {
     const MODE_SWAP = 0;
     const MODE_WRAP = 1;
     const MODE_UNWRAP = 2;
     const { address, isConnecting, connector: activeConnector, } = useAccount()
-    const chainId = localhost.id
-    const provider = useEthersProvider({chainId})
     const signer = useEthersSigner()
+    const provider = useEthersProvider({chainId: signer?.provider._network.chainId})
     const [tokenIndex, setTokenIndex] = useState(0); // 0 = tokenA, 1 = tokenB
     const [tokens, setTokens] = useState<any>([]);
     const [tokenA, setTokenA] = useState<any>({
@@ -67,7 +54,34 @@ const useSwap = () => {
     const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
     const [loadingTokenPrice, setLoadingTokenPrice] = useState<boolean>(false)
     const [userEmail, setUserEmail] = useState<string>("")
-    const [network, setNetwork] = useState<any>({"image": "/images/base.png", "name":"BASE"},)
+    const [currentChainId, setCurrrentChainId] = useState<any>()
+    const [network, setNetwork] = useState<any>({"image": "/images/base.png", "name":"BASE"})
+    const [networkselectedA, setNetworkSelectedA] = useState<any>({"image": "/images/base.png", "name":"BASE", "id":84532, "address": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a", "CCIP_BnM": "0x88A2d74F47a237a62e7A51cdDa67270CE381555e", "CCIP_LnM": "0xA98FA8A008371b9408195e52734b1768c0d1Cb5c"})
+    const cryptoSupportData = [
+      {"image": "/images/base.png", "name":"BASE", "id":84532},
+      {"image": "/images/optimism.png", "name":"OPTIMISM", "id":11155420},
+      {"image": "/images/celo.png", "name":"CELO", "id":44787},
+      {"image": "/images/mode.png", "name":"MODE", "id":919},
+   ]
+
+   const networks = [
+    {"image": "/images/base.png", "name":"BASE", "id":84532, "address": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a", "CCIP_BnM": "0x88A2d74F47a237a62e7A51cdDa67270CE381555e", "CCIP_LnM": "0xA98FA8A008371b9408195e52734b1768c0d1Cb5c"},
+    {"image": "/images/optimism.png", "name":"OPTIMISM", "id":11155420, "CCIP_BnM": "0x8aF4204e30565DF93352fE8E1De78925F6664dA7", "CCIP_LnM": "0x044a6B4b561af69D2319A2f4be5Ec327a6975D0a", "address": "0xb4BF84b079E080Be165174357cEdC10FACAAB9Ae", "chainSelector" : "5224473277236331295"},
+    {"image": "/images/celo.png", "name":"CELO", "id":44787, "address": "0xa2EF6cCB0b4A6c23FBb4e56e839456613bF03970", "CCIP_BnM": "0x7e503dd1dAF90117A1b79953321043d9E6815C72", "CCIP_LnM": "0x7F4e739D40E58BBd59dAD388171d18e37B26326f", "chainSelector" : "3552045678561919002"},
+    {"image": "/images/mode.png", "name":"MODE", "id":919, "address": "0x2Db56C7de28B1B78b623715c98f74156790f82c8", "CCIP_BnM": "0xB9d4e1141E67ECFedC8A8139b5229b7FF2BF16F5", "CCIP_LnM": "0x86f9Eed8EAD1534D87d23FbAB247D764fC725D49", "chainSelector" : "829525985033418733"},
+]
+
+    useEffect(() => {
+      if(signer){
+        let _chainId = signer.provider._network.chainId;
+        setCurrrentChainId(_chainId)
+        let _network = cryptoSupportData.filter((item) => { return item.id == _chainId })
+        let _networkSelected = networks.filter((item) => { return item.id == _chainId })
+        setNetwork( _network[0])
+        setNetworkSelectedA(_networkSelected[0])
+      }
+    }, [signer])
+
 
     const selectToken = (_tokenA : any, _tokenB : any) => {
         if (Object.keys(_tokenA).length > 0 && Object.keys(_tokenB).length > 0) {
@@ -167,7 +181,7 @@ const useSwap = () => {
               const balance = await getBalance(configConnect, {
                 //@ts-ignore
                 address: address,
-                chainId: chainId, 
+                chainId: currentChainId, 
             })
             const _balanceA = balance.value
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
@@ -180,7 +194,7 @@ const useSwap = () => {
             const balance = await getBalance(configConnect, {
               //@ts-ignore
               address: address, 
-              chainId: chainId,
+              chainId: currentChainId,
           })
             const _balanceB = balance.value
             setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
@@ -521,7 +535,10 @@ const useSwap = () => {
     setLoadingTokens,
     signer,
     userEmail, 
-    setUserEmail
+    setUserEmail,
+    currentChainId,
+    networkselectedA, 
+    setNetworkSelectedA
   };
 };
 

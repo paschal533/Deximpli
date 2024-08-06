@@ -5,6 +5,8 @@ import { Separator } from '../ui/separator'
 import Modal from '../mondal'
 import TokenModal from './tokenModal'
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
+import TestTokenModal from './test-token'
+import TestNetworkModal from './network'
 
 const IntegrationTrigger = ({ children, title, selectToken, type }: { children: ReactNode, title : string, selectToken? : any, type : string }) => {
 
@@ -31,6 +33,16 @@ const IntegrationTrigger = ({ children, title, selectToken, type }: { children: 
                <TokenModal selectToken={selectToken} />  
             </Modal>
         )
+        case 'test-token':
+        return (
+          <Modal
+              title={title}
+              type="Integration"
+              trigger={children}
+            > 
+               <TestTokenModal selectToken={selectToken} />  
+            </Modal>
+        )
       case 'network':
         return (
           <Modal
@@ -39,12 +51,7 @@ const IntegrationTrigger = ({ children, title, selectToken, type }: { children: 
               trigger={children}
             >
               
-              <PlaceholdersAndVanishInput
-                placeholders={placeholdersNetwork}
-                onChange={handleChange}
-                onSubmit={onSubmit}
-              />
-              <Separator orientation="horizontal" />
+              <TestNetworkModal selectToken={selectToken} />
               
             </Modal>
         )

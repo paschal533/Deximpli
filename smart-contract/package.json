@@ -12,15 +12,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@chainlink/contracts": "^1.2.0",
+    "@chainlink/contracts-ccip": "^1.4.0",
     "@openzeppelin/contracts": "^4.8.1",
+    "@pythnetwork/pyth-sdk-solidity": "^3.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "buffer": "^6.0.3",
     "chai": "^4.3.7",
     "dotenv": "^16.4.5",
     "ethers": "^5.7.1",
-    "json-rpc-engine": "^6.1.0",
-    "buffer": "^6.0.3"
+    "json-rpc-engine": "^6.1.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
