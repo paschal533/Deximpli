@@ -1,9 +1,9 @@
-"use client"
+"use server"
 import { client } from '@/lib/prisma'
 import { sendTransactionEmail } from "@/lib/mail"
 
-export const sendMail = async (fullname : string, receiverEmail: string, sendValue: string) => {
-   await sendTransactionEmail(fullname, receiverEmail, sendValue)
+export const sendMail = async (address : string, receiverEmail: string, sendValue: string) => {
+   await sendTransactionEmail(address, receiverEmail, sendValue)
 }
 
 export const onLoginUser = async (address : any) => {

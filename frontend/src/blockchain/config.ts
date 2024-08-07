@@ -21,6 +21,7 @@ export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 // Create wagmiConfig
 export const config = getDefaultConfig({
   appName: 'Deximpli',
+  //@ts-ignore
   projectId: projectId,
   chains: [baseSepolia, optimismSepolia, modeTestnet, celoAlfajores, localhost],
   ssr: true,

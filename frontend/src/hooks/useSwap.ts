@@ -71,7 +71,7 @@ const useSwap = () => {
     {"image": "/images/mode.png", "name":"MODE", "id":919, "address": "0x2Db56C7de28B1B78b623715c98f74156790f82c8", "CCIP_BnM": "0xB9d4e1141E67ECFedC8A8139b5229b7FF2BF16F5", "CCIP_LnM": "0x86f9Eed8EAD1534D87d23FbAB247D764fC725D49", "chainSelector" : "829525985033418733"},
 ]
 
-    useEffect(() => {
+    const getSigner = useCallback(async() => {
       if(signer){
         let _chainId = signer.provider._network.chainId;
         setCurrrentChainId(_chainId)
@@ -80,7 +80,11 @@ const useSwap = () => {
         setNetwork( _network[0])
         setNetworkSelectedA(_networkSelected[0])
       }
-    }, [signer])
+    }, [])
+
+    useEffect(() => {
+      getSigner();
+  }, [signer, getSigner])
 
 
     const selectToken = (_tokenA : any, _tokenB : any) => {
@@ -207,7 +211,7 @@ const useSwap = () => {
           toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
           console.log(error);
         }
-      }, [address, signer, tokenA, tokenB, tokensSelected]);
+      }, [address, signer, tokenA, tokenB, currentChainId, tokensSelected]);
     
       useEffect(() => {
         if (!graph && swapMode === MODE_SWAP) {
@@ -461,7 +465,7 @@ const useSwap = () => {
         setTokens(_tokens);
         setLoadingTokens(false)
         //@ts-ignore
-      }, []);
+      }, [provider]);
     
       useEffect(() => {
         getSupportedTokens();

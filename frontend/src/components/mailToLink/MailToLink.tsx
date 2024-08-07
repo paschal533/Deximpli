@@ -125,7 +125,7 @@ function MailtoLink({
     <motion.button
       initial={{ scale: 1, opacity: 1 }}
       animate={control}
-      onClick={handleEmail}
+      onClick={() => handleEmail()}
       disabled={isValidEmail == null || userEmail.length == 0}
       whileHover={{ backgroundColor: "#ff73d7" }}
       whileTap={{ scale: 0.98 }}

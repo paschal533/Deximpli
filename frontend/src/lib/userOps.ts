@@ -81,7 +81,7 @@ export const signUserOps = async (userOp: any, account: PrivateKeyAccount) => {
     Number.parseInt(CHAIN_ID)
   );
   console.log("userOpHash", userOpHash);
-
+vb
   userOp.signature = (await account.signMessage({
     message: {
       raw: userOpHash as `0x${string}`,

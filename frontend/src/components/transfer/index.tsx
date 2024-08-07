@@ -4,34 +4,26 @@ import * as API from "@/services/api";
 import { Loader } from '../loader';
 import { Button } from '@/components/ui/button'
 import { sendMail } from '@/actions/transfer';
-import { getContract, WalletClient, createWalletClient, http, Chain, parseEther } from "viem";
+import { Chain, parseEther } from "viem";
+import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
 import {
-  arbitrumSepolia,
-  polygonMumbai,
   baseSepolia,
-  lineaTestnet,
-  hardhat,
+  optimismSepolia,
+  celoAlfajores,
+  modeTestnet
 } from "viem/chains";
-import { privateKeyToAccount } from "viem/accounts";
 import EmailAccountFactoryAbi from "@/constants/EmailAccountFactoryAbi";
-import EntryPointAbi from "@/constants/EntryPointAbi"
-import { publicClient } from "@/lib/wallet";
 import { poseidonCircom, stringToCircomArray } from "@/lib/crypto";
-import { createModularAccountAlchemyClient } from "@alchemy/aa-alchemy";
-import { Hex, encodeFunctionData } from "viem";
-import { LocalAccountSigner } from "@alchemy/aa-core";
-import contractABI from "@/constants/EmailAccount.json"
-import { getCurrentNonce, generateSendTokenCalldata, generateUserOps, signUserOps } from "@/lib/userOps"
 import { SwapContext } from '@/context/swap-provider';
+import { ConnectBTN } from '../customWallet';
 
 function Transfer({ user } : any) {
   const [sendValue, setSendValue] = useState<any>();
-  const {address, signer} = useContext(SwapContext);
+  const {address, signer, currentChainId, provider} = useContext(SwapContext);
   const [receiverEmail, setReciverEmail] = useState<string>("");
   const [isExchangedLoaded, setIsExchangedLoaded] = useState(false);
   const [exchangeRate, setExchangeRate] = useState<number>(0);
-  const currentNonces: { [key: string]: number } = {};
-  const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
 
   async function getHashedEmail(email: string): Promise<bigint> {
     try {
@@ -75,18 +67,32 @@ function Transfer({ user } : any) {
 
   const isValidEmail = validateEmail(receiverEmail);
 
+  const networks: { [key: string]: Chain } = {
+    "84532": baseSepolia,
+    "11155420": optimismSepolia,
+    "44787": celoAlfajores,
+    "919": modeTestnet
+  };
+
+  const accountFactoryContractAddrs: { [key: string]: `0x${string}` } = {
+    "84532": "0x5424fe6064b058798A37D241829ABB41476dFa92",
+    "11155420": "0x215a4E3cD6d4e2eAC067866Bdad6a9d425E14e8f",
+    "44787": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a",
+    "919": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a"
+  };
+
   async function GetContractAddress(email: string) {
     //const setHashedEmail = usePersistentStore((state) => state.setHashedEmail);
     if (email) {
       const hashedEmail = await getHashedEmail(email);
       //setHashedEmail(hashedEmail);
-  
-      const userContractAddress = await publicClient.readContract({
-        address: EMAIL_FACTORY_ADDRESS,
-        functionName: "getAddress",
-        abi: EmailAccountFactoryAbi,
-        args: [hashedEmail, BigInt(0)],
-      });
+
+      const _network = networks[currentChainId]
+      const EMAIL_FACTORY_ADDRESS = accountFactoryContractAddrs[currentChainId]
+
+      const contract = new ethers.Contract(EMAIL_FACTORY_ADDRESS, EmailAccountFactoryAbi, signer)
+
+      const userContractAddress = await contract.getAddress(hashedEmail, BigInt(0))
   
       return userContractAddress;
     } else {
@@ -94,112 +100,34 @@ function Transfer({ user } : any) {
     }
   }
 
-  const chainId = "421614"
-
-  const networks: { [key: string]: Chain } = {
-    "421614": arbitrumSepolia,
-    /*"80001": polygonMumbai,
-    "84532": baseSepolia,
-    "59140": lineaTestnet,
-    "48899": zircuitTestnet,*/
-  };
-
-  const accountFactoryContractAddrs: { [key: string]: `0x${string}` } = {
-    "421614": "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC",
-    /*"80001": "0x2ffbd824342F067dce1FD5635c4e8c930DE67411",
-    "84532": "0x87AF054a2629761eb34dd5bfb1B5a6AD9b972C6f",
-    "59140": "0x7356f4cC77168d0e6f94F1d8E28aeA1316852c0d",
-    "48899": "0xD570bF4598D3ccF214E288dd92222b8Bd3134984",*/
-  };
-
-  const walletClients: { [key: string]: WalletClient } = {};
-const accountFactories: { [key: string]: any } = {};
-for (const [chainId, network] of Object.entries(networks)) {
-  walletClients[chainId] = createWalletClient({
-    account: address,
-    chain: network,
-    transport: http(),
-  });
-  accountFactories[chainId] = getContract({
-    address: accountFactoryContractAddrs[chainId],
-    abi: EmailAccountFactoryAbi,
-    client: walletClients[chainId],
-  });
-}
-
 
   const handleClick = async () => {
 
-     /*try {
+    try {
     const recieverSmartWallet = await GetContractAddress(receiverEmail)
-    const sendAmountInWei = await parseEther(EtherAmount.toString()) 
-     
-    const calldata = await generateSendTokenCalldata(
-      recieverSmartWallet as `0x${string}`,
-      sendAmountInWei,
-      user?.authenticated?.contractAddress as `0x${string}`
-    );
-    console.log("Calldata: ", calldata);
+    const sendAmountInWei =  parseEther(EtherAmount.toString()) 
+      
 
-    const userOp = await generateUserOps(
-      user?.authenticated?.contractAddress as string,
-      calldata
-    );
-    console.log("User op: ", userOp);
-    const signer =  privateKeyToAccount(user?.authenticated?.privatekey);
-    const signedUserOp = await signUserOps(userOp, signer);
-    console.log("Signed user op: ", signedUserOp);
+      // Creating a transaction param
+      const tx = {
+        from: address,
+        to: recieverSmartWallet,
+        value: sendAmountInWei,
+      };
 
-    const entryPoint = getContract({
-      address: ENTRYPOINT_ADDRESS,
-      abi: EntryPointAbi,
-      client: walletClients[chainId]!,
-    });
-
-    currentNonces[chainId] = await publicClient.getTransactionCount({
-      address: walletAddress,
-    });
-
-    const txHash = await entryPoint.write.handleOps(
-      [[signedUserOp], walletAddress],
-      {
-        account: privateKeyToAccount(process.env.NEXT_PUBLIC_PRIVATE_KEY as `0x${string}`),
-        chain: networks[chainId],
-        nonce: currentNonces[chainId]++,
-        gas: 800000n,
-        maxFeePerGas: BigInt(2e8),
-        maxPriorityFeePerGas: BigInt(2e8),
-      }
-    );
-    console.log(txHash);
-
-      await sendMail(address, receiverEmail, sendValue)
-
-      setReciverEmail("");
-      setSendValue("");
+      signer?.sendTransaction(tx).then((transaction) => {
+        console.dir(transaction);
+        toast.info(`Transaction succeeded! Transaction Hash: ${transaction.hash}`)
+        //@ts-ignore
+         sendMail(address, receiverEmail, sendValue)
+         setReciverEmail("");
+         setSendValue("");
+      });
      }catch(error) {
-      console.log(error.message)
-     }*/
-
-  };
-
-
-const EMAIL_FACTORY_ADDRESS = "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC"
-
-
-  const SendTransaction = async () => {
-     try {
-
-      await sendMail(user?.authenticated.fullname, receiverEmail, sendValue)
-
-      //setReciverEmail("");
-      //setSendValue("");
-
-     }catch(error){
-      console.log(error?.message)
+      console.log(error)
      }
 
-  }
+  };
 
 
   return (
@@ -257,14 +185,14 @@ const EMAIL_FACTORY_ADDRESS = "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC"
     )}
   </div>
   
-     <Button
+     {!address ? <ConnectBTN/> :<Button
         type="submit"
         className="w-full mt-6 bg-[#D7009A]"
         disabled={!sendValue || !receiverEmail || isValidEmail == null}
         onClick={() => handleClick()}
       >
         Send transaction
-      </Button> 
+      </Button>}
   </div>
   )
 }

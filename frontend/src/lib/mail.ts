@@ -1,3 +1,4 @@
+"use server"
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
@@ -14,10 +15,11 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 };
 
 export const sendTransactionEmail = async (senderName: string, receiverEmail: string, amount: string) => {
-  const confirmLink = `${domain}/dashboard`;
+   try {
+    const confirmLink = `${domain}/dashboard`;
 
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: "deximpli@resend.dev",
     to: receiverEmail,
     subject: "Credit alert!",
     html: `<p>We wish to inform you that a credit transaction of $${amount} occured on your email account. The transaction was sent by ${senderName}</b>
@@ -25,5 +27,8 @@ export const sendTransactionEmail = async (senderName: string, receiverEmail: st
             <p>Click <a href="${confirmLink}">here</a> to view the transaction.</p>
             `,
   });
+   }catch (error){
+    console.log(error)
+   }
 };
 

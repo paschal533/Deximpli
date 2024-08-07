@@ -3,23 +3,24 @@ import { useState, useEffect, useContext } from 'react'
 import { cn } from '@/lib/utils'
 import React from 'react'
 import AppDrawer from '../drawer'
-import { Plus } from 'lucide-react'
-import FormGenerator from '../forms/form-generator'
-import UploadButton from '../upload-button'
+import { ethers } from 'ethers';
+import {
+  baseSepolia,
+  optimismSepolia,
+  celoAlfajores,
+  modeTestnet
+} from "viem/chains";
 import { Button } from '../ui/button'
-import Link from 'next/link'
-import Image from 'next/image'
 import MailtoLink from '../mailToLink/MailToLink'
 import { poseidonCircom, stringToCircomArray } from "@/lib/crypto";
-import { Address, PrivateKeyAccount } from "viem";
-import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { publicClient } from "@/lib/wallet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import EmailAccountFactoryAbi from "@/constants/EmailAccountFactoryAbi";
-//import { onUpdateUser } from '@/actions/settings'
 import { Loader } from '@/components/loader'
 import { onCompleteUserRegistration } from '@/actions/transfer'
 import { SwapContext } from '@/context/swap-provider'
+import { getPublicClient } from '@wagmi/core'
+import { Chain } from "viem";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +35,7 @@ const DomainMenu = ({ user, min, sidebar }: Props) => {
   const [hashedEmail, setHashedEmail] = useState<bigint>();
   const [newOwnerTrigger, setNewOwnerTrigger] = useState(0);
   const [verified, setVerified] = useState<boolean>(false)
-  const { address, userEmail } = useContext(SwapContext)
+  const { address, userEmail, currentChainId, signer } = useContext(SwapContext)
 
   function changeOwner() {
     setNewOwnerTrigger((prev) => prev + 1);
@@ -51,60 +52,75 @@ const DomainMenu = ({ user, min, sidebar }: Props) => {
     }
   }
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchUser = async () => {
  
-      if(user.authenticated) {
+      if(user?.authenticated) {
         let hashedEmail = await getHashedEmail(userEmail);
         setHashedEmail(hashedEmail);
       }
     }
     fetchUser()
 
-  }, [userEmail])
+  }, [userEmail, user?.authenticated])*/
 
 
-const EMAIL_FACTORY_ADDRESS = "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC"
+  const networks: { [key: string]: Chain } = {
+    "84532": baseSepolia,
+    "11155420": optimismSepolia,
+    "44787": celoAlfajores,
+    "919": modeTestnet
+  };
 
-async function GetContractAddress(email: string) {
-  //const setHashedEmail = usePersistentStore((state) => state.setHashedEmail);
-  if (email) {
-    const hashedEmail = await getHashedEmail(email);
-    //setHashedEmail(hashedEmail);
+  const accountFactoryContractAddrs: { [key: string]: `0x${string}` } = {
+    "84532": "0x5424fe6064b058798A37D241829ABB41476dFa92",
+    "11155420": "0x215a4E3cD6d4e2eAC067866Bdad6a9d425E14e8f",
+    "44787": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a",
+    "919": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a"
+  };
 
-    const userContractAddress = await publicClient.readContract({
-      address: EMAIL_FACTORY_ADDRESS,
-      functionName: "getAddress",
-      abi: EmailAccountFactoryAbi,
-      args: [hashedEmail, BigInt(0)],
-    });
+  async function GetContractAddress(email: string) {
+    //const setHashedEmail = usePersistentStore((state) => state.setHashedEmail);
+    if (email) {
+      const hashedEmail = await getHashedEmail(email);
+      //setHashedEmail(hashedEmail);
 
-    return userContractAddress;
-  } else {
-    console.log("No email found, please reset email");
+      const _network = networks[currentChainId]
+      const EMAIL_FACTORY_ADDRESS = accountFactoryContractAddrs[currentChainId]
+
+      const contract = new ethers.Contract(EMAIL_FACTORY_ADDRESS, EmailAccountFactoryAbi, signer)
+
+      const userContractAddress = await contract.getAddress(hashedEmail, BigInt(0))
+  
+      return userContractAddress;
+    } else {
+      console.log("No email found, please reset email");
+    }
   }
-}
 
  const onOwnerChanged = async (contractAddress: string, walletAddress: string, email: string) => {
     await onCompleteUserRegistration(email, contractAddress, walletAddress)
     setVerified(true);
  }
 
- useEffect(() => {
+ /*useEffect(() => {
   const verifyAccount = async () => {
     if (!user.authenticated) {
       const userContractAddress = await GetContractAddress(userEmail)
       console.log("user contractAddress", userContractAddress);
       console.log("account", address);
       setLoading(true);
-      const unwatch = publicClient.watchEvent({
+      const client = getPublicClient(publicClient, {
+        chainId: currentChainId, 
+      })
+      const unwatch = client.watchEvent({
         address: userContractAddress,
         pollingInterval: 5000,
         onLogs: (logs) => {
           console.log("Event Logs", logs);
           const transferedToAddress = logs[0]?.topics[2]?.toLowerCase();
           const accountAddress = address?.toLowerCase().substring(2);
-
+  
           if (accountAddress && transferedToAddress?.includes(accountAddress)) {
             setLoading(false);
             unwatch();
@@ -114,10 +130,10 @@ async function GetContractAddress(email: string) {
           }
         },
       });
-
+  
       console.log("Watching for events");
       setLoading(false);
-
+  
       return () => {
         console.log("stop watching for events");
         setLoading(false);
@@ -128,7 +144,7 @@ async function GetContractAddress(email: string) {
 
   verifyAccount()
 
-}, [newOwnerTrigger]);
+}, [newOwnerTrigger]);*/
 
 const verifyAccount = async () => {
   if (!user.authenticated) {
@@ -136,7 +152,10 @@ const verifyAccount = async () => {
     console.log("user contractAddress", userContractAddress);
     console.log("account", address);
     setLoading(true);
-    const unwatch = publicClient.watchEvent({
+    const client = getPublicClient(publicClient, {
+      chainId: currentChainId, 
+    })
+    const unwatch = client.watchEvent({
       address: userContractAddress,
       pollingInterval: 5000,
       onLogs: (logs) => {

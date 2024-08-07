@@ -1,4 +1,4 @@
-import { UserOperation } from "./../../contracts/lib/account-abstraction/test/UserOperation";
+import { UserOperation } from "./../../AA_and_Zk_contracts/lib/account-abstraction/test/UserOperation";
 import {
   createPublicClient,
   http,
@@ -10,10 +10,10 @@ import {
 } from "viem";
 import EmailAccountAbi from "./abi/EmailAccount";
 import {
-  arbitrumSepolia,
-  polygonMumbai,
   baseSepolia,
-  lineaTestnet,
+  optimismSepolia,
+  celoAlfajores,
+  modeTestnet,
 } from "viem/chains";
 import { zircuitTestnet } from "./utils/zircuit";
 import { privateKeyToAccount } from "viem/accounts";
@@ -30,18 +30,16 @@ if (!PRIVATE_KEY) {
 }
 
 const networks: { [key: string]: Chain } = {
-  "421614": arbitrumSepolia,
-  /*"80001": polygonMumbai,
   "84532": baseSepolia,
-  "59140": lineaTestnet,
-  "48899": zircuitTestnet,*/
+  "11155420": optimismSepolia,
+  "44787": celoAlfajores,
+  "919": modeTestnet
 };
 const accountFactoryContractAddrs: { [key: string]: `0x${string}` } = {
-  "421614": "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC",
-  /*"80001": "0x2ffbd824342F067dce1FD5635c4e8c930DE67411",
-  "84532": "0x87AF054a2629761eb34dd5bfb1B5a6AD9b972C6f",
-  "59140": "0x7356f4cC77168d0e6f94F1d8E28aeA1316852c0d",
-  "48899": "0xD570bF4598D3ccF214E288dd92222b8Bd3134984",*/
+  "84532": "0x5424fe6064b058798A37D241829ABB41476dFa92",
+  "11155420": "0x215a4E3cD6d4e2eAC067866Bdad6a9d425E14e8f",
+  "44787": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a",
+  "919": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a"
 };
 
 const walletClients: { [key: string]: WalletClient } = {};

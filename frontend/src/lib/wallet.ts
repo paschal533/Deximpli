@@ -1,35 +1,20 @@
+import { http, createConfig } from '@wagmi/core'
 import {
-  Account,
-  Client,
-  createPublicClient,
-  createWalletClient,
-  http,
-  publicActions,
-} from "viem";
-import { arbitrumSepolia } from "viem/chains";
+  baseSepolia,
+  optimismSepolia,
+  modeTestnet,
+  celoAlfajores,
+  localhost
+} from 'wagmi/chains';
 
-export const publicClient = createPublicClient({
-  chain: arbitrumSepolia,
-  transport: http(
-    // "https://sepolia-rollup.arbitrum.io/rpc"
-    "https://arb-sepolia.g.alchemy.com/v2/Y1tLHU15xch1CSkkNrbt7eZ-G7c7_7-I"
-  ),
-});
+export const publicClient = createConfig({
+  chains: [baseSepolia, optimismSepolia, modeTestnet, celoAlfajores, localhost],
+  transports: {
+    [baseSepolia.id]: http(),
+    [optimismSepolia.id]: http(),
+    [modeTestnet.id]: http(),
+    [celoAlfajores.id]: http(),
+    [localhost.id]: http(),
+  },
+})
 
-let client: Client | null = null;
-function createClientFromAccount(account: Account) {
-  if (!client) {
-    client = createWalletClient({
-      account,
-      chain: arbitrumSepolia,
-      transport: http(
-        // "https://sepolia-rollup.arbitrum.io/rpc"
-        "https://arb-sepolia.g.alchemy.com/v2/Y1tLHU15xch1CSkkNrbt7eZ-G7c7_7-I"
-      ),
-    }).extend(publicActions);
-  }
-  return client;
-}
-
-export { createClientFromAccount };
-export default client;
