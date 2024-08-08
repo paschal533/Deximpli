@@ -1,13 +1,12 @@
 import { ethers } from 'ethers';
 import { ERC20ABI } from './ERC20ABI';
 import FactoryABI from '@/contracts/PairFactory.json';
-import FactoryAddress from '@/contracts/PairFactory-address.json';
+import { SuppotedPairFactoryContractAddress, SuppotedWrappedETHContractAddress } from "./Tokens"
 import { TokenPairABI } from './TokenPairABI';
-import WETH from '@/contracts/WETH-address.json';
 
 export const getTokenInfo = async (address : any, provider : any) => {
   let name = "Unknown", symbol = "Unknown", logo = "", decimals = 18;
-  if (address === WETH.address) {
+  if (address === SuppotedWrappedETHContractAddress(provider?._network.chainId)) {
     // Shortcut for Ether
     return { address, name: "Ether", symbol: "ETH", decimals: 18 };
   }
@@ -25,7 +24,7 @@ export const getTokenInfo = async (address : any, provider : any) => {
 export const getLiquidityPools = async (provider : any) => {
   const pools = new Map();
   try {
-    const factory = new ethers.Contract(FactoryAddress.address, FactoryABI.abi, provider);
+    const factory = new ethers.Contract(SuppotedPairFactoryContractAddress(provider?._network.chainId), FactoryABI.abi, provider);
     const nPairs = await factory.allPairsLength();
     for (let i = 0; i < nPairs; i++) {
       const address = await factory.allPairs(i);
@@ -45,6 +44,7 @@ export const ERROR_CODE = {
 }
 
 export const getErrorMessage = (error : any, defaultMessage : string) => {
+  //@ts-ignore
   return ERROR_CODE[error.code] || defaultMessage;
 }
 
@@ -67,8 +67,8 @@ export const toString = (x : any) => {
 }
 
 // Check if a token object is ETH
-export const isETH = (token : any)=> {
-  return token.address === WETH.address && token.symbol === 'ETH';
+export const isETH = (token : any, provider : any)=> {
+  return token.address === SuppotedWrappedETHContractAddress(provider?._network.chainId) && token.symbol === 'ETH';
 }
 
 // Format BigNumber interst to percentage

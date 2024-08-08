@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useContext } from 'react';
 import { useWeb3React } from "@web3-react/core";
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
-import ManagerAddress from '@/contracts/StakingPoolManager-address.json';
+import { SuppotedStakingPoolManagerContractAddress} from "@/utils/Tokens"
 import ManagerABI from '@/contracts/StakingPoolManager.json';
 import { toString } from '@/utils/Helper';
 import { StakingPoolABI } from '@/utils/StakingPoolABI';
@@ -38,7 +38,7 @@ const useFarm = () => {
 
   const getFarmingPools = useCallback(async () => {
     try {
-      const stakingPoolManager = new ethers.Contract(ManagerAddress.address, ManagerABI.abi, signer);
+      const stakingPoolManager = new ethers.Contract(SuppotedStakingPoolManagerContractAddress(provider?._network.chainId), ManagerABI.abi, signer);
       // Get all staking pool addresses from staking pool manager
       const stakingPools = await stakingPoolManager.getAllStakingPools();
       const liquidityPools = await getLiquidityPools(provider);
@@ -71,7 +71,7 @@ const useFarm = () => {
       toast.error("Cannot fetch staking pools!");
       console.log(error);
     }
-  }, [address, signer]);
+  }, [signer, provider]);
 
   const handleHarvest = async (address : any) => {
     setLoading(true);
@@ -129,7 +129,7 @@ const useFarm = () => {
   const handleCreate = async () => {
     setLoading(true);
     try {
-      const stakingPoolManager = new ethers.Contract(ManagerAddress.address, ManagerABI.abi, signer);
+      const stakingPoolManager = new ethers.Contract(SuppotedStakingPoolManagerContractAddress(provider?._network.chainId), ManagerABI.abi, signer);
       const tx = await stakingPoolManager.createStakingPool(stakedToken.address, rewardToken.address,
         ethers.utils.parseUnits(toString(rewardPerBlock), rewardToken.decimals), startBlock, endBlock, {
             maxFeePerGas: ethers.utils.parseUnits('60', 'gwei'), // Set this to a higher value

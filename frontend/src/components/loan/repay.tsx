@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { getTokenInfo, toString } from '@/utils/Helper';
 import AssetPoolABI from '@/contracts/AssetPool.json';
-import AssetPoolAddress from '@/contracts/AssetPool-address.json';
+import { SuppotedAssetPoolContractAddress } from '@/utils/Tokens';
 import { LoanContext } from '@/context/loan-provider';
 
 const Repay = ({ tokenAddress } : { tokenAddress : any}) => {
@@ -23,7 +23,7 @@ const Repay = ({ tokenAddress } : { tokenAddress : any}) => {
       const tokenContract = new ethers.Contract(tokenObject.address, ERC20ABI, signer);
       let _balance = await tokenContract.balanceOf(address);
       _balance = Number(ethers.utils.formatUnits(_balance, tokenObject.decimals));
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       const userPoolData = await assetPool.getUserPoolData(address, tokenObject.address);
       const _compoundBorrow = Number(ethers.utils.formatUnits(userPoolData.compoundedBorrowBalance));
       setPayoffAmount(_compoundBorrow);
@@ -32,18 +32,18 @@ const Repay = ({ tokenAddress } : { tokenAddress : any}) => {
       toast.error("Cannot get maximum repay amount!");
       console.log(error);
     }
-  }, [address, signer]);
+  }, [address, signer, provider]);
 
   const checkAllowance = useCallback(async (tokenObject : any) => {
     try {
       const tokenContract = new ethers.Contract(tokenObject.address, ERC20ABI, signer);
-      let _allow = await tokenContract.allowance(address, AssetPoolAddress.address);
+      let _allow = await tokenContract.allowance(address, SuppotedAssetPoolContractAddress(provider?._network.chainId));
       setAllow(Number(ethers.utils.formatUnits(_allow, tokenObject.decimals)));
     } catch (error) {
       toast.error("Cannot get allowance for token!");
       console.error(error);
     }
-  }, [address, signer]);
+  }, [address, signer, provider]);
 
   const loadRepayInfo = useCallback(async (tokenAddress : any) => {
     setLoading(true);
@@ -57,7 +57,7 @@ const Repay = ({ tokenAddress } : { tokenAddress : any}) => {
       console.log(error);
     }
     setLoading(false);
-  }, [checkAllowance, getMaxRepayAmount])
+  }, [checkAllowance, getMaxRepayAmount, provider])
 
   useEffect(() => {
     if (address && tokenAddress) {
@@ -80,7 +80,7 @@ const Repay = ({ tokenAddress } : { tokenAddress : any}) => {
     try {
       const tokenContract = new ethers.Contract(token.address, ERC20ABI, signer);
       const allowAmount = ethers.utils.parseUnits(toString(amount * 1.1), token.decimals);
-      const tx = await tokenContract.approve(AssetPoolAddress.address, allowAmount);
+      const tx = await tokenContract.approve(SuppotedAssetPoolContractAddress(provider?._network.chainId), allowAmount);
       await tx.wait()
       toast.info("Deposit amount is approved!");
       await checkAllowance(token);
@@ -105,7 +105,7 @@ const Repay = ({ tokenAddress } : { tokenAddress : any}) => {
   const handleRepay = async () => {
     setLoading(true);
     try {
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       let tx;
       if (payoffAmount <= amount) {
         // Pay off the loan

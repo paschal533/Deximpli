@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback,useContext } from 'react';
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
-import AssetPoolAddress from '@/contracts/AssetPool-address.json';
-import FooAddress from '@/contracts/FooToken-address.json';
-import BarAddress from '@/contracts/BarToken-address.json';
-import WETHAddress from '@/contracts/WETH-address.json';
+import { 
+  SuppotedAssetPoolContractAddress, 
+  SuppotedWrappedETHContractAddress,
+  SuppotedTokensBAR,
+  SuppotedTokensFOO
+} from "@/utils/Tokens"
 import AssetPoolABI from '@/contracts/AssetPool.json';
-import { getTokenInfo, formatInterest, formatEtherOrNA, boolOrNA } from '@/utils/Helper';
+import { getTokenInfo } from '@/utils/Helper';
 import { SwapContext } from '@/context/swap-provider';
 import { useEthersSigner } from '@/components/Wallet';
 import { useAccount } from 'wagmi'
@@ -24,11 +26,11 @@ const useLoan = () => {
   const getPools = useCallback(async (assetPool : any) => {
     try {
       const _pools = [];
-      for (const tokenAddress of [WETHAddress.address, FooAddress.address, BarAddress.address]) {
+      for (const tokenAddress of [SuppotedWrappedETHContractAddress(provider?._network.chainId), SuppotedTokensFOO(provider?._network.chainId), SuppotedTokensBAR(provider?._network.chainId)]) {
         const poolInfo = await assetPool.getPool(tokenAddress);
         const userPoolData = await assetPool.getUserPoolData(address, tokenAddress);
         _pools.push({
-          assetToken: WETHAddress.address === tokenAddress ? {
+          assetToken: SuppotedWrappedETHContractAddress(provider?._network.chainId) === tokenAddress ? {
             address: tokenAddress, name: "Wrapped ETH", symbol: "WETH", decimals: 18
           } : await getTokenInfo(tokenAddress, provider),
           borrowInterest: poolInfo.borrowRate,
@@ -45,7 +47,7 @@ const useLoan = () => {
       toast.error("Cannot fetch pool information!");
       console.error(error);
     }
-  }, [address]);
+  }, [address, provider]);
 
   const getUserInfo = useCallback(async (assetPool : any) => {
     try {
@@ -66,7 +68,7 @@ const useLoan = () => {
   const loadPoolsAndUserInfo = useCallback(async () => {
     setLoading(true);
     try {
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       await getPools(assetPool);
       await getUserInfo(assetPool);
     } catch (error) {
@@ -74,7 +76,7 @@ const useLoan = () => {
       console.error(error);
     }
     setLoading(false);
-  }, [getPools, getUserInfo, signer]);
+  }, [getPools, getUserInfo, signer, provider]);
 
   useEffect(() => {
     if (address) {

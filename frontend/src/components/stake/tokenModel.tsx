@@ -12,7 +12,6 @@ import {
   } from "@mui/material";
 import Image from 'next/image';
 import { DialogClose } from "../ui/dialog"
-import { SuppotedTokens } from "@/utils/Tokens";
 import { getTokenInfo } from '@/utils/Helper';
 import WETH from '@/contracts/WETH-address.json'
 import { StakeContext } from '@/context/stake-provider';

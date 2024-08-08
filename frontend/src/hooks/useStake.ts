@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useContext } from 'react';
-import { useWeb3React } from "@web3-react/core";
 import { toast } from 'react-toastify';
 import { ethers } from 'ethers';
-import ManagerAddress from '@/contracts/StakingPoolManager-address.json';
 import ManagerABI from '@/contracts/StakingPoolManager.json';
 import { toString } from '@/utils/Helper';
 import { StakingPoolABI } from '@/utils/StakingPoolABI';
@@ -14,7 +12,7 @@ import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
 import WETH from '@/contracts/WETH-address.json';
 import WETHABI from '@/contracts/WETH.json';
-import { SuppotedTokens } from "@/utils/Tokens";
+import { SuppotedTokens, SuppotedStakingPoolManagerContractAddress } from "@/utils/Tokens";
 import { SwapContext } from '@/context/swap-provider';
 
 const useStake = () => {
@@ -70,7 +68,7 @@ const useStake = () => {
   const handleCreate = async () => {
     setLoading(true);
     try {
-      const stakingPoolManager = new ethers.Contract(ManagerAddress.address, ManagerABI.abi, signer);
+      const stakingPoolManager = new ethers.Contract(SuppotedStakingPoolManagerContractAddress(provider?._network.chainId), ManagerABI.abi, signer);
       const tx = await stakingPoolManager.createStakingPool(stakedToken.address, rewardToken.address,
         ethers.utils.parseUnits(toString(rewardPerBlock), rewardToken.decimals), startBlock, endBlock, {
           maxFeePerGas: ethers.utils.parseUnits('60', 'gwei'), // Set this to a higher value
@@ -94,7 +92,7 @@ const useStake = () => {
 
   const getStakingPools = useCallback(async () => {
     try {
-      const stakingPoolManager = new ethers.Contract(ManagerAddress.address, ManagerABI.abi, signer);
+      const stakingPoolManager = new ethers.Contract(SuppotedStakingPoolManagerContractAddress(provider?._network.chainId), ManagerABI.abi, signer);
       // Get all staking pool addresses from staking pool manager
       const stakingPools = await stakingPoolManager.getAllStakingPools();
       const pools = [];
@@ -125,7 +123,7 @@ const useStake = () => {
       toast.error("Cannot fetch staking pools!");
       console.error(error);
     }
-  }, [signer]);
+  }, [signer, provider]);
 
   const handleHarvest = async (address : any) => {
     setLoading(true);
@@ -172,14 +170,17 @@ const useStake = () => {
       // Remove the first element since ETH is not an ERC20 token
       _tokens.shift();
     }
-    for (let TokenAddress of SuppotedTokens) {
+    if(provider?._network.chainId){
       //@ts-ignore
-      _tokens.push(await getTokenInfo(TokenAddress, provider));
-    }
-    setTokens(_tokens);
-    setLoadingTokens(false)
+      for (let TokenAddress of SuppotedTokens(provider?._network.chainId)) {
+        //@ts-ignore
+        _tokens.push(await getTokenInfo(TokenAddress, provider));
+      }
+      setTokens(_tokens);
+      setLoadingTokens(false)
+     }
     //@ts-ignore
-  }, []);
+  }, [provider]);
 
   useEffect(() => {
     const init = async () => {
@@ -190,7 +191,7 @@ const useStake = () => {
       getSupportedTokens(true);
     }
     init()
-  }, [address, getStakingPools, signer]);
+  }, [address, getStakingPools, signer, provider]);
 
     return {
         address,

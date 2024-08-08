@@ -23,7 +23,7 @@ export const config = getDefaultConfig({
   appName: 'Deximpli',
   //@ts-ignore
   projectId: projectId,
-  chains: [baseSepolia, optimismSepolia, modeTestnet, celoAlfajores, localhost],
+  chains: [modeTestnet, baseSepolia, optimismSepolia, celoAlfajores, localhost],
   ssr: true,
   storage: createStorage({
     storage: cookieStorage
@@ -31,11 +31,11 @@ export const config = getDefaultConfig({
 })
 
 export const configConnect = createConfig({
-  chains: [baseSepolia, optimismSepolia, modeTestnet, celoAlfajores, localhost],
+  chains: [modeTestnet, baseSepolia, optimismSepolia, celoAlfajores, localhost],
   transports: {
+    [modeTestnet.id]: http(),
     [baseSepolia.id]: http(),
     [optimismSepolia.id]: http(),
-    [modeTestnet.id]: http(),
     [celoAlfajores.id]: http(),
     [localhost.id]: http(),
   },

@@ -24,7 +24,7 @@ module.exports = {
       url: 'https://sepolia.optimism.io',
       accounts: [process.env.PRIVATE_KEY],
     },
-  'base-sepolia': {
+  baseSepolia: {
       url: 'https://sepolia.base.org',
       accounts: [process.env.PRIVATE_KEY],
     },
@@ -34,7 +34,6 @@ module.exports = {
     },
    mode: {
       url: "https://sepolia.mode.network",
-      chainId: 919,
       accounts: [process.env.PRIVATE_KEY],
       allowUnlimitedContractSize: true
     }
@@ -42,11 +41,14 @@ module.exports = {
  etherscan: {
     apiKey: {
       // Is not required by blockscout. Can be any non-empty string
-      optimismSepolia: "abc"
+      optimismSepolia: "abc",
+      baseSepolia: "abc",
+      mode: "abc"
+      
     },
     customChains: [
       {
-        network: "optimism-sepolia",
+        network: "optimismSepolia",
         chainId: 11155420,
         urls: {
           apiURL: "https://optimism-sepolia.blockscout.com/api",
@@ -54,7 +56,7 @@ module.exports = {
         }
       },
       {
-        network: "base-sepolia",
+        network: "baseSepolia",
         chainId: 84532,
         urls: {
          apiURL: "https://base-sepolia.blockscout.com/api",

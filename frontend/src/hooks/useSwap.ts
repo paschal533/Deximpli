@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { useWeb3React } from "@web3-react/core";
 import { buildGraphFromEdges, findAllPaths } from '@/utils/Graph';
 import { ERC20ABI } from '@/utils/ERC20ABI';
-import WETH from '@/contracts/WETH-address.json';
 import WETHABI from '@/contracts/WETH.json';
 import { toast } from 'react-toastify';
 import { TokenPairABI } from '@/utils/TokenPairABI';
 import { getErrorMessage, getTokenInfo, toString, isETH } from '@/utils/Helper';
 import { ethers } from 'ethers';
 import FactoryABI from '@/contracts/PairFactory.json';
-import FactoryAddress from '@/contracts/PairFactory-address.json';
-import AMMRouterAddress from '@/contracts/AMMRouter-address.json';
 import AMMRouterABI from '@/contracts/AMMRouter.json';
-import { SuppotedTokens } from "@/utils/Tokens";
+import { SuppotedTokens, 
+  SuppotedWrappedETHContractAddress,
+  SuppotedPairFactoryContractAddress,
+  SuppotedAMMRouterContractAddress
+} from "@/utils/Tokens";
 import { useEthersProvider, useEthersSigner } from '@/components/Wallet';
 import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
@@ -29,7 +29,7 @@ const useSwap = () => {
     const [tokenIndex, setTokenIndex] = useState(0); // 0 = tokenA, 1 = tokenB
     const [tokens, setTokens] = useState<any>([]);
     const [tokenA, setTokenA] = useState<any>({
-        address: WETH.address,
+        address: SuppotedWrappedETHContractAddress(provider?._network.chainId),
         name: 'Ether',
         symbol: 'ETH',
         logo: "/images/eth.png",
@@ -54,7 +54,7 @@ const useSwap = () => {
     const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
     const [loadingTokenPrice, setLoadingTokenPrice] = useState<boolean>(false)
     const [userEmail, setUserEmail] = useState<string>("")
-    const [currentChainId, setCurrrentChainId] = useState<any>()
+    const [currentChainId, setCurrrentChainId] = useState<any>(provider?._network.chainId)
     const [network, setNetwork] = useState<any>({"image": "/images/base.png", "name":"BASE"})
     const [networkselectedA, setNetworkSelectedA] = useState<any>({"image": "/images/base.png", "name":"BASE", "id":84532, "address": "0x601566d18cdaE8D4347bB6ba43C5C2247D9c1f5a", "CCIP_BnM": "0x88A2d74F47a237a62e7A51cdDa67270CE381555e", "CCIP_LnM": "0xA98FA8A008371b9408195e52734b1768c0d1Cb5c"})
     const cryptoSupportData = [
@@ -71,20 +71,24 @@ const useSwap = () => {
     {"image": "/images/mode.png", "name":"MODE", "id":919, "address": "0x2Db56C7de28B1B78b623715c98f74156790f82c8", "CCIP_BnM": "0xB9d4e1141E67ECFedC8A8139b5229b7FF2BF16F5", "CCIP_LnM": "0x86f9Eed8EAD1534D87d23FbAB247D764fC725D49", "chainSelector" : "829525985033418733"},
 ]
 
-    const getSigner = useCallback(async() => {
-      if(signer){
-        let _chainId = signer.provider._network.chainId;
-        setCurrrentChainId(_chainId)
-        let _network = cryptoSupportData.filter((item) => { return item.id == _chainId })
-        let _networkSelected = networks.filter((item) => { return item.id == _chainId })
-        setNetwork( _network[0])
-        setNetworkSelectedA(_networkSelected[0])
-      }
-    }, [])
+    const getSigner = () => {
+       try {
+        if(provider){
+          let _chainId = provider?._network.chainId;
+          setCurrrentChainId(_chainId)
+          let _network = cryptoSupportData.filter((item) => { return item.id == _chainId })
+          let _networkSelected = networks.filter((item) => { return item.id == _chainId })
+          setNetwork( _network[0])
+          setNetworkSelectedA(_networkSelected[0])
+        }
+       }catch(error){
+        console.log(error)
+       }
+    }
 
     useEffect(() => {
       getSigner();
-  }, [signer, getSigner])
+  }, [provider])
 
 
     const selectToken = (_tokenA : any, _tokenB : any) => {
@@ -94,8 +98,8 @@ const useSwap = () => {
             tokenIndex === indexTokenA ? setTokenA({}) : setTokenB({});
           }
           if (_tokenA.address === _tokenB.address) {
-            if (_tokenA.address === WETH.address && _tokenA.symbol !== _tokenB.symbol) {
-              if (isETH(_tokenA)) {
+            if (_tokenA.address === SuppotedWrappedETHContractAddress(provider?._network.chainId) && _tokenA.symbol !== _tokenB.symbol) {
+              if (isETH(_tokenA, provider)) {
                 setSwapMode(MODE_WRAP);
               } else {
                 setSwapMode(MODE_UNWRAP);
@@ -130,7 +134,7 @@ const useSwap = () => {
     const initGraph = useCallback(async () => {
         setLoading(true);
         try {
-          let factory = new ethers.Contract(FactoryAddress.address, FactoryABI.abi, provider);
+          let factory = new ethers.Contract(SuppotedPairFactoryContractAddress(provider?._network.chainId), FactoryABI.abi, provider);
           const nPairs = await factory.allPairsLength();
           const edgeList = [];
     
@@ -162,26 +166,26 @@ const useSwap = () => {
     }, [provider]);
 
     const checkAllowance = useCallback(async () => {
-        if (!tokensSelected || isETH(tokenA)) {
+        if (!tokensSelected || isETH(tokenA, provider)) {
           return;
         }
         try {
           const _token = new ethers.Contract(tokenA.address, ERC20ABI, signer);
-          let _allow = await _token.allowance(address, AMMRouterAddress.address);
+          let _allow = await _token.allowance(address, SuppotedAMMRouterContractAddress(provider?._network.chainId));
           _allow = Number(ethers.utils.formatUnits(_allow, tokenA.decimals));
           setAllowAmount(_allow);
         } catch (error) {
           toast.error(getErrorMessage(error, "Cannot check allowances!"));
           console.error(error);
         }
-    }, [address, signer, tokenA, tokensSelected]);
+    }, [address, signer, tokenA, tokensSelected, provider]);
 
     const getBalances = useCallback(async () => {
         if (!tokensSelected) {
           return;
         }
         try {
-          if (isETH(tokenA)) {
+          if (isETH(tokenA, provider)) {
               const balance = await getBalance(configConnect, {
                 //@ts-ignore
                 address: address,
@@ -194,7 +198,7 @@ const useSwap = () => {
             const _balanceA = await _tokenA.balanceOf(address);
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA, tokenA.decimals)));
           }
-          if (isETH(tokenB)) {
+          if (isETH(tokenB, provider)) {
             const balance = await getBalance(configConnect, {
               //@ts-ignore
               address: address, 
@@ -211,7 +215,7 @@ const useSwap = () => {
           toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
           console.log(error);
         }
-      }, [address, signer, tokenA, tokenB, currentChainId, tokensSelected]);
+      }, [address, signer, tokenA, tokenB, currentChainId, provider, tokensSelected]);
     
       useEffect(() => {
         if (!graph && swapMode === MODE_SWAP) {
@@ -265,7 +269,7 @@ const useSwap = () => {
         setLoading(true);
         console.log("loading")
         try {
-          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, provider);
+          const ammRouter = new ethers.Contract(SuppotedAMMRouterContractAddress(provider?._network.chainId), AMMRouterABI.abi, provider);
           let max = Number.MIN_SAFE_INTEGER;
           let _bestPath = null;
           for (const path of paths) {
@@ -295,7 +299,7 @@ const useSwap = () => {
         }
         setLoading(true);
         try {
-          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, provider);
+          const ammRouter = new ethers.Contract(SuppotedAMMRouterContractAddress(provider?._network.chainId), AMMRouterABI.abi, provider);
           let min = Number.MAX_SAFE_INTEGER;
           let _bestPath = null;
           for (const path of paths) {
@@ -349,7 +353,7 @@ const useSwap = () => {
         try {
           const _token = new ethers.Contract(tokenA.address, ERC20ABI, signer);
           const _allowAmount = ethers.utils.parseUnits(toString(amountA), tokenA.decimals);
-          const tx = await _token.approve(AMMRouterAddress.address, _allowAmount);
+          const tx = await _token.approve(SuppotedAMMRouterContractAddress(provider?._network.chainId), _allowAmount);
           await tx.wait();
           toast.info(`${tokenA.symbol} is enabled!`);
           await checkAllowance();
@@ -362,11 +366,11 @@ const useSwap = () => {
       const handleSwap = async () => {
         setLoading(true);
         try {
-          const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, signer);
+          const ammRouter = new ethers.Contract(SuppotedAMMRouterContractAddress(provider?._network.chainId), AMMRouterABI.abi, signer);
           //@ts-ignore
           const deadline = parseInt(new Date().getTime() / 1000) + 30;
           let tx;
-          if (isETH(tokenA)) {
+          if (isETH(tokenA, provider)) {
             tx = await (tokenIndex === indexTokenA ?
               ammRouter.swapExactETHForTokens(
                 ethers.utils.parseUnits(toString(amountB * 0.9), tokenB.decimals),
@@ -378,7 +382,7 @@ const useSwap = () => {
                 bestPath, address, deadline, {
                 value: ethers.utils.parseUnits(toString(amountA * 1.1), tokenA.decimals)
               }));
-          } else if (isETH(tokenB)) {
+          } else if (isETH(tokenB, provider)) {
             tx = await (tokenIndex === indexTokenA ?
               ammRouter.swapExactTokensForETH(
                 ethers.utils.parseUnits(toString(amountA), tokenA.decimals),
@@ -417,7 +421,7 @@ const useSwap = () => {
       const handleWrap = async () => {
         setLoading(true);
         try {
-          const contract = new ethers.Contract(WETH.address, WETHABI.abi, signer);
+          const contract = new ethers.Contract(SuppotedWrappedETHContractAddress(provider?._network.chainId), WETHABI.abi, signer);
           const tx = await (swapMode === MODE_WRAP ?
             contract.deposit({ value: ethers.utils.parseUnits(toString(amountA)) }) :
             contract.withdraw(ethers.utils.parseUnits(toString(amountA))));
@@ -442,13 +446,13 @@ const useSwap = () => {
         }
         // The native coin of EVM and its wrapped form
         const _tokens = [{
-          address: WETH.address,
+          address: SuppotedWrappedETHContractAddress(provider?._network.chainId),
           name: 'Ether',
           symbol: 'ETH',
           logo: "/images/eth.png",
           decimals: 18
         }, {
-          address: WETH.address,
+          address: SuppotedWrappedETHContractAddress(provider?._network.chainId),
           name: 'Wrapped ETH',
           symbol: 'WETH',
           logo: "/images/eth.png",
@@ -458,18 +462,23 @@ const useSwap = () => {
           // Remove the first element since ETH is not an ERC20 token
           _tokens.shift();
         }
-        for (let TokenAddress of SuppotedTokens) {
+         if(provider?._network.chainId){
           //@ts-ignore
-          _tokens.push(await getTokenInfo(TokenAddress, provider));
-        }
-        setTokens(_tokens);
-        setLoadingTokens(false)
+          for (let TokenAddress of SuppotedTokens(provider?._network.chainId)) {
+            //@ts-ignore
+            _tokens.push(await getTokenInfo(TokenAddress, provider));
+          }
+          setTokens(_tokens);
+          setLoadingTokens(false)
+         }
         //@ts-ignore
       }, [provider]);
     
       useEffect(() => {
-        getSupportedTokens();
-      }, [getSupportedTokens])
+        if(provider){
+          getSupportedTokens();
+        }
+      }, [getSupportedTokens, provider])
     
 
   const disconnectWallet = async () => {};

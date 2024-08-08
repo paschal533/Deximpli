@@ -2,10 +2,9 @@ import { useState, useEffect, useCallback, useContext} from 'react';
 import { Button, Divider, Grid, Typography, useTheme, TextField, IconButton, CircularProgress } from '@mui/material';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { getTokenInfo, toString } from '@/utils/Helper';
 import AssetPoolABI from '@/contracts/AssetPool.json';
-import AssetPoolAddress from '@/contracts/AssetPool-address.json';
+import { SuppotedAssetPoolContractAddress } from '@/utils/Tokens';
 import { LoanContext } from '@/context/loan-provider';
 
 const Borrow = ({ tokenAddress } : { tokenAddress : any}) => {
@@ -17,7 +16,7 @@ const { address, provider, signer } = useContext(LoanContext)
 
   const getBorrowableQuota = useCallback(async (tokenObject : any) => {
     try {
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       const userInfo = await assetPool.getUserInfo(address);
       const tokenPrice = await assetPool.getPriceInWETH(tokenObject.address);
       const poolInfo = await assetPool.getPool(tokenObject.address);
@@ -28,7 +27,7 @@ const { address, provider, signer } = useContext(LoanContext)
       toast.error("Cannot get quota for current user!");
       console.log(error);
     }
-  }, [address, signer]);
+  }, [address, signer, provider]);
 
   const loadBorrowInfo = useCallback(async (tokenAddress : any) => {
     setLoading(true);
@@ -41,7 +40,7 @@ const { address, provider, signer } = useContext(LoanContext)
       console.log(error);
     }
     setLoading(false);
-  }, [getBorrowableQuota]);
+  }, [getBorrowableQuota, provider]);
 
   useEffect(() => {
     if (address && tokenAddress) {
@@ -62,7 +61,7 @@ const { address, provider, signer } = useContext(LoanContext)
   const handleBorrow = async () => {
     setLoading(true);
     try {
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       const tx = await assetPool.borrow(token.address, ethers.utils.parseUnits(toString(amount), token.decimals));
       await tx.wait();
       toast.info(`Token borrowed successfully! Transaction hash: ${tx.hash}`);

@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { getTokenInfo, toString } from '@/utils/Helper';
 import { ERC20ABI } from '@/utils/ERC20ABI';
 import AssetPoolABI from '@/contracts/AssetPool.json';
-import AssetPoolAddress from '@/contracts/AssetPool-address.json';
+import { SuppotedAssetPoolContractAddress } from '@/utils/Tokens';
 import { LoanContext } from '@/context/loan-provider';
 
 const Withdraw = ({ tokenAddress } : { tokenAddress : any}) => {
@@ -17,7 +17,7 @@ const Withdraw = ({ tokenAddress } : { tokenAddress : any}) => {
 
   const getWithdrawableBalance = useCallback(async (tokenObject : any) => {
     try {
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       let _balance = await assetPool.getUserCompoundedLiquidityBalance(address, tokenObject.address);
       _balance = Number(ethers.utils.formatUnits(_balance, tokenObject.decimals));
       const poolInfo = await assetPool.getPool(tokenObject.address);
@@ -27,7 +27,7 @@ const Withdraw = ({ tokenAddress } : { tokenAddress : any}) => {
       toast.error("Cannot get deposit balance!");
       console.error(error);
     }
-  }, [address, signer]);
+  }, [address, signer, provider]);
 
   const loadWithdrawInfo = useCallback(async (tokenAddress : any) => {
     setLoading(true);
@@ -40,7 +40,7 @@ const Withdraw = ({ tokenAddress } : { tokenAddress : any}) => {
       console.log(error);
     }
     setLoading(false);
-  }, [getWithdrawableBalance]);
+  }, [getWithdrawableBalance, provider]);
 
   const handleChange = (e : any) => {
     let tmpVal = e.target.value ? e.target.value : 0;
@@ -66,7 +66,7 @@ const Withdraw = ({ tokenAddress } : { tokenAddress : any}) => {
 
   const handleWithdraw = async () => {
     try {
-      const assetPool = new ethers.Contract(AssetPoolAddress.address, AssetPoolABI.abi, signer);
+      const assetPool = new ethers.Contract(SuppotedAssetPoolContractAddress(provider?._network.chainId), AssetPoolABI.abi, signer);
       let tx;
       if (depositBalance <= amount) {
         // Withdraw all shares

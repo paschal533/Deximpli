@@ -65,4 +65,6 @@ contract WETH {
 
         return true;
     }
+
+    receive() external payable {}
 }
