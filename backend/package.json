@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "listen": "ts-node -r tsconfig-paths/register src/listen.ts",
-    "api": "ts-node -r tsconfig-paths/register --max-old-space-size=4096 src/api.ts",
+    "api": "ts-node -r tsconfig-paths/register src/api.ts",
     "dev": "npm install -g ts-node && ts-node -r tsconfig-paths/register src/api.ts && ts-node -r tsconfig-paths/register src/listen.ts"
   },
   "keywords": [],
