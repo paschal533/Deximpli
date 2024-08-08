@@ -17,28 +17,26 @@ module.exports = {
   },
   networks: {                 
     hardhat: {
-     chainId: 1337                
+     chainId: 1337,
+     allowUnlimitedContractSize: true                
    },
    optimismSepolia : {
       url: 'https://sepolia.optimism.io',
       accounts: [process.env.PRIVATE_KEY],
-      gasPrice: 1000000000,
     },
   'base-sepolia': {
       url: 'https://sepolia.base.org',
       accounts: [process.env.PRIVATE_KEY],
-      gasPrice: 1000000000,
     },
   alfajores : {
       url: 'https://alfajores-forno.celo-testnet.org',
       accounts: [process.env.PRIVATE_KEY],
-      gasPrice: 1000000000,
     },
    mode: {
       url: "https://sepolia.mode.network",
       chainId: 919,
       accounts: [process.env.PRIVATE_KEY],
-      gasPrice: 1000000000,
+      allowUnlimitedContractSize: true
     }
  },
  etherscan: {
