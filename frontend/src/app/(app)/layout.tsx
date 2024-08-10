@@ -16,10 +16,10 @@ const OwnerLayout = async ({ children }: Props) => {
       <div className="flex h-screen w-full">
         <SideBar user={authenticated} />
         <div className={cn("w-full pl-0 h-screen flex flex-col", 
-          expand == undefined && 'md:!pl-[12rem]',
+          expand == undefined && 'md:pl-[17rem]',
           expand == true
-            ? 'md:!pl-[17rem]'
-            : expand == false && 'md:!pl-[12rem]'
+            ? 'md:pl-[17rem]'
+            : expand == false && 'md:pl-[12rem]'
         )}>
             {children}
 
