@@ -244,7 +244,7 @@ function Swap() {
                   </Grid>
                 </div>
               ) : (
-                <div className="h-full !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full">
+                <div className="h-full !font-medium !mt-2 justify-center items-center flex bg-cream px-4 py-2 rounded-xl  w-full">
                   <CircularProgress sx={{ color: "#D7009A" }} />
                 </div>
               )
