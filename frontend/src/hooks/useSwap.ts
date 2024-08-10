@@ -189,7 +189,8 @@ const useSwap = () => {
               const balance = await getBalance(configConnect, {
                 //@ts-ignore
                 address: address,
-                chainId: currentChainId, 
+                //@ts-ignore
+                chainId: provider?._network.chainId, 
             })
             const _balanceA = balance.value
             setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
@@ -202,7 +203,8 @@ const useSwap = () => {
             const balance = await getBalance(configConnect, {
               //@ts-ignore
               address: address, 
-              chainId: currentChainId,
+              //@ts-ignore
+              chainId: provider?._network.chainId,
           })
             const _balanceB = balance.value
             setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
@@ -215,7 +217,7 @@ const useSwap = () => {
           toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
           console.log(error);
         }
-      }, [address, signer, tokenA, tokenB, currentChainId, provider, tokensSelected]);
+      }, [address, signer, tokenA, tokenB, provider, tokensSelected]);
     
       useEffect(() => {
         if (!graph && swapMode === MODE_SWAP) {
@@ -478,7 +480,7 @@ const useSwap = () => {
         if(provider){
           getSupportedTokens();
         }
-      }, [getSupportedTokens, provider])
+      }, [provider?._network.chainId, provider])
     
 
   const disconnectWallet = async () => {};

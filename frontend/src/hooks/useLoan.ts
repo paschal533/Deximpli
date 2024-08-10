@@ -21,12 +21,14 @@ const useLoan = () => {
   const [expanded, setExpanded] = useState(false);
   const [userInfo, setUserInfo] = useState<any>({});
   const [pools, setPools] = useState<any>([]);
+  const [loadingInfo, setLoadingInfo] = useState(true)
   const [INACTIVE, ACTIVE] = [0, 1]; // Pool status
 
   const getPools = useCallback(async (assetPool : any) => {
+    setLoadingInfo(true)
     try {
       const _pools = [];
-      for (const tokenAddress of [SuppotedWrappedETHContractAddress(provider?._network.chainId), SuppotedTokensFOO(provider?._network.chainId), SuppotedTokensBAR(provider?._network.chainId)]) {
+      for (const tokenAddress of [SuppotedWrappedETHContractAddress(provider?._network.chainId), SuppotedTokensFOO(provider?._network.chainId)]) {
         const poolInfo = await assetPool.getPool(tokenAddress);
         const userPoolData = await assetPool.getUserPoolData(address, tokenAddress);
         _pools.push({
@@ -43,9 +45,11 @@ const useLoan = () => {
         })
       }
       setPools(_pools);
+      setLoadingInfo(false)
     } catch (error) {
+      setLoadingInfo(false)
       toast.error("Cannot fetch pool information!");
-      console.error(error);
+      console.log(error);
     }
   }, [address, provider]);
 
@@ -84,6 +88,7 @@ const useLoan = () => {
     }
   }, [address, loadPoolsAndUserInfo]);
 
+
   const handleChange = (address : any) => async (event : any, isExpanded : any) => {
     setExpanded(isExpanded ? address : false);
   };
@@ -98,7 +103,8 @@ const useLoan = () => {
         ACTIVE,
         INACTIVE,
         provider, 
-        signer
+        signer,
+        loadingInfo
     }
 }
 

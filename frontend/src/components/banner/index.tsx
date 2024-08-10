@@ -28,9 +28,9 @@ function Banner() {
             <section className='w-full flex flex-col md:w-1/2'>
               <Slide>
               <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-center text-7xl font-bold leading-none text-transparent">A Smarter Way </h1>
-              <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-center text-7xl font-bold leading-none text-transparent">To Send Crypto</h1>
+              <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-center text-7xl font-bold leading-none text-transparent">To Trade Crypto</h1>
 
-              <p className='line-clamp-4 text-lg mt-8 font-medium'>Experience the future of effortless cryptocurrency transactions with our platform – send tokens instantly to anyone via email, eliminating the need for complex wallet addresses. </p>
+              <p className='line-clamp-4 text-lg mt-8 font-medium'>Experience the future of effortless cryptocurrency transactions with our platform – swap, stake, farm, borrow and send tokens instantly to anyone via email, eliminating the need for complex wallet addresses. </p>
 
               <Link href="/swap"> <motion.button
                 whileHover={{ backgroundColor: "#6becec" }}

@@ -5,13 +5,12 @@ import ManagerABI from '@/contracts/StakingPoolManager.json';
 import { toString } from '@/utils/Helper';
 import { StakingPoolABI } from '@/utils/StakingPoolABI';
 import { getTokenInfo, getLiquidityPools } from '@/utils/Helper';
-import { localProvider, useEthersProvider, useEthersSigner } from '@/components/Wallet';
+import { useEthersSigner } from '@/components/Wallet';
 import { getBlockNumber } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 import { getBalance } from '@wagmi/core'
 import { configConnect } from '@/blockchain/config';
-import WETH from '@/contracts/WETH-address.json';
-import WETHABI from '@/contracts/WETH.json';
+import { SuppotedWrappedETHContractAddress } from "@/utils/Tokens"
 import { SuppotedTokens, SuppotedStakingPoolManagerContractAddress } from "@/utils/Tokens";
 import { SwapContext } from '@/context/swap-provider';
 
@@ -35,6 +34,7 @@ const useStake = () => {
   const [hideExpired, setHideExpired] = useState(false);
   const [loadingTokens, setLoadingTokens] = useState<boolean>(false)
   const [tokens, setTokens] = useState<any>([])
+  const [loadingStake, setLoadingStake] = useState(true)
 
   const handleSelectToken = (token : any) => {
     if (tokenIndex === indexStakedToken) {
@@ -82,7 +82,8 @@ const useStake = () => {
       setStartBlock(0);
       setEndBlock(0);
       getStakingPools();
-      await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
+      //@ts-ignore
+      await getBlockNumber(configConnect, { chainId: provider?._network.chainId }).then((number : any) => setCurrentBlock(number));
     } catch (error) {
       toast.error("Cannot create staking pool!");
       console.error(error);
@@ -91,6 +92,7 @@ const useStake = () => {
   }
 
   const getStakingPools = useCallback(async () => {
+    setLoadingStake(true)
     try {
       const stakingPoolManager = new ethers.Contract(SuppotedStakingPoolManagerContractAddress(provider?._network.chainId), ManagerABI.abi, signer);
       // Get all staking pool addresses from staking pool manager
@@ -119,7 +121,9 @@ const useStake = () => {
         });
       }
       setStakingPools(pools);
+      setLoadingStake(false)
     } catch (error) {
+      setLoadingStake(false)
       toast.error("Cannot fetch staking pools!");
       console.error(error);
     }
@@ -132,7 +136,8 @@ const useStake = () => {
       const tx = await stakingPool.deposit(0);
       await tx.wait();
       toast.info(`Successfully harvest reward token! Transaction hash: ${tx.hash}`);
-      await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
+      //@ts-ignore
+      await getBlockNumber(configConnect, { chainId: provider?._network.chainId}).then((number : any) => setCurrentBlock(number));
       await getStakingPools();
     } catch (error) {
       toast.error("Cannot harvest token!");
@@ -154,13 +159,13 @@ const useStake = () => {
     setLoadingTokens(true)
     // The native coin of EVM and its wrapped form
     const _tokens = [{
-      address: WETH.address,
+      address: SuppotedWrappedETHContractAddress(provider?._network.chainId),
       name: 'Ether',
       symbol: 'ETH',
       logo: "/images/eth.png",
       decimals: 18
     }, {
-      address: WETH.address,
+      address: SuppotedWrappedETHContractAddress(provider?._network.chainId),
       name: 'Wrapped ETH',
       symbol: 'WETH',
       logo: "/images/eth.png",
@@ -185,7 +190,8 @@ const useStake = () => {
   useEffect(() => {
     const init = async () => {
       if (address && signer) {
-        await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
+        //@ts-ignore
+        await getBlockNumber(configConnect, { chainId: provider?._network.chainId}).then((number : any) => setCurrentBlock(Number(number)));
         getStakingPools();
       }
       getSupportedTokens(true);
@@ -216,7 +222,8 @@ const useStake = () => {
         handleClick,
         handleHarvest,
         tokens,
-        loadingTokens
+        loadingTokens,
+        loadingStake
     }
 }
 

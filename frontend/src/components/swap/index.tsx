@@ -53,8 +53,7 @@ function Swap() {
     indexTokenB,
     graph,
     setGraph,
-    tokensSelected,
-    setTokensSelected,
+    provider,
     swapMode,
     setSwapMode,
     MODE_SWAP,
@@ -159,7 +158,7 @@ function Swap() {
         </div>
         <section>
         {address ? <div>
-            {allowAmount < amountA && swapMode === MODE_SWAP && !isETH(tokenA) ?
+            {allowAmount < amountA && swapMode === MODE_SWAP && !isETH(tokenA, provider) ?
               <Button className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex !bg-cream rounded-xl mt-2  w-full" fullWidth onClick={() => handleApprove()}>
                 {loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : `Enable ${tokenA.symbol}`}
               </Button> : <Button 

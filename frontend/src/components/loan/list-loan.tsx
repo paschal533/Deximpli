@@ -25,11 +25,12 @@ const ListAssetPools = () => {
         expanded,
         ACTIVE,
         INACTIVE,
+        loadingInfo
 
     } = useContext(LoanContext)
 
-  return <div className='w-full mb-8'>
-    {address ? (loading ? <CircularProgress /> : <>
+  return <div className='w-full !max-w-[1000px] mb-8'>
+    {address ? (loading ? <div className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'><CircularProgress /></div>  : <>
       <div className="flex gap-3 flex-wrap">
           <DashboardCard
             value={`${formatEtherOrNA(userInfo.totalDeposit)} ETH`}
@@ -54,7 +55,7 @@ const ListAssetPools = () => {
         </div>
     <div className='pr-4'>
         <h1 className='mt-4 text-3xl font-bold'>Borrow Assets</h1>
-      {pools.length > 0 ? pools.map((pool : any, index : any) =>
+      {!loadingInfo ? pools.length > 0 ? pools.map((pool : any, index : any) =>
         <Accordion key={`asset-pool-${index}`}
           expanded={expanded === pool.assetToken.address}
           onChange={handleChange(pool.assetToken.address)}
@@ -129,9 +130,8 @@ const ListAssetPools = () => {
             </div>
           </div>
           </AccordionDetails>
-        </Accordion>) : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Cannot load asset pools!</p>} </div></>) :
-      <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Please connect to a wallet to view asset pools.</p>
-      }
+        </Accordion>) : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Cannot load asset pools!</p> : <div className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'><CircularProgress /></div> } </div></>) :
+      <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Please connect to a wallet to view asset pools.</p>}
     
   </div>;
 };

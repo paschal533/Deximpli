@@ -116,7 +116,7 @@ const useLiquidity = () => {
       setPair('');
       console.log(error);
     }
-  }, [signer, tokenA, tokenB, tokensSelected, provider]);
+  }, [signer, tokenA, tokenB, tokensSelected, provider?._network.chainId]);
 
   const getBalances = useCallback(async () => {
     if (!tokensSelected) {
@@ -127,11 +127,13 @@ const useLiquidity = () => {
         const balance = await getBalance(configConnect, {
             //@ts-ignore
             address: address,
+            //@ts-ignore
+            chainId: provider?._network.chainId
         })
         const _balanceA = balance.value
         setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
       } else {
-        const _tokenA = new ethers.Contract(tokenA.address, ERC20ABI, signer);
+        const _tokenA = new ethers.Contract(tokenA.address, ERC20ABI, provider);
         const _balanceA = await _tokenA.balanceOf(address);
         setBalanceA(Number(ethers.utils.formatUnits(_balanceA, tokenA.decimals)));
       }
@@ -139,11 +141,13 @@ const useLiquidity = () => {
         const balance = await getBalance(configConnect, {
             //@ts-ignore
             address: address,
+            //@ts-ignore
+            chainId: provider?._network.chainId
         })
         const _balanceB = balance.value
         setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
       } else {
-        const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, signer);
+        const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, provider);
         const _balanceB = await _tokenB.balanceOf(address);
         setBalanceB(Number(ethers.utils.formatUnits(_balanceB, tokenB.decimals)));
       }
@@ -151,7 +155,7 @@ const useLiquidity = () => {
       toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
       console.log(error);
     }
-  }, [address, signer, tokenA, tokenB, tokensSelected, provider]);
+  }, [address, signer, tokenA, tokenB, provider, tokensSelected, provider?._network.chainId]);
 
   const checkAllowances = useCallback(async () => {
     if (!tokensSelected) {
@@ -180,7 +184,7 @@ const useLiquidity = () => {
       toast.error(getErrorMessage(error, "Cannot check allowances!"));
       console.error(error);
     }
-  }, [address, signer, tokenA, tokenB, amountA, amountB, tokensSelected, provider]);
+  }, [address, signer, tokenA, tokenB, amountA, amountB, tokensSelected, provider?._network.chainId]);
 
   useEffect(() => {
     const pairAddress = ''; //searchParam.get('pair');
@@ -194,7 +198,7 @@ const useLiquidity = () => {
       getBalances();
       checkAllowances();
     }
-  }, [address, tokensSelected, checkAllowances, getBalances, getReserves, setTokenInfo]);
+  }, [address, tokensSelected, provider?._network.chainId, checkAllowances, getBalances, getReserves, setTokenInfo]);
 
   const handleChange = (e : any) => {
     let tmpVal = e.target.value ? e.target.value : 0;
@@ -347,7 +351,6 @@ const useLiquidity = () => {
     getReserves,
     getBalances,
     checkAllowances,
-    
     };
 }
 

@@ -87,7 +87,7 @@ function CreateStake() {
                  <p className='font-semibold text-md'>Start Block</p>
  
                  <input type='number' id="start_block"  value={startBlock == 0 ? '' : startBlock} 
-                 onChange={handleChange} placeholder='0' 
+                 onChange={handleChange} placeholder={currentBlock}
                  className='bg-none w-1/2 text-xl font-bold placeholder:text-slate-500 placeholder:font-bold placeholder:text-3xl bg-white shadow-sm p-2 rounded-lg outline-none border-none' />
              </div>
              <div className='w-full mt-6 flex items-center justify-between'>

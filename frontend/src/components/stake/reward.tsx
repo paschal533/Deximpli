@@ -17,6 +17,7 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
   const [balance, setBalance] = useState(0);
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [loadingInfo, setLoadingInfo] = useState(true)
 
   const getRewardToken = useCallback(async (poolAddress : any) => {
     if (stakingPoolAddress.length > 0 && Object.keys(rewardToken).length > 0) {
@@ -39,6 +40,7 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
       const tokenContract = new ethers.Contract(rewardToken.address, ERC20ABI, signer);
       const _balance = await tokenContract.balanceOf(address);
       setBalance(Number(ethers.utils.formatUnits(_balance, rewardToken.decimals)));
+      setLoadingInfo(false)
     } catch (error) {
       toast.error('Cannot get balance for reward token!');
       console.error(error);
@@ -82,7 +84,7 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
     return <p className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>Please connect to a wallet to supply reward</p>;
   } 
 
-  return <div>
+  return <div> {loadingInfo ? (<div className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'><CircularProgress /></div>) : <div>
     <Grid item>
       <Grid container columnGap={12} className='mb-4'>
         <Grid item>
@@ -113,6 +115,6 @@ const SupplyStakingReward = ({ poolAddress } : { poolAddress : any}) => {
         <Grid item xs={4}></Grid>
       </div>
     </Grid>
-  </div>
+  </div>} </div>
 }
 export default SupplyStakingReward;

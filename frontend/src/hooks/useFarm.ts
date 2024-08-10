@@ -35,8 +35,10 @@ const useFarm = () => {
   const [hideExpired, setHideExpired] = useState(false);
   const [LoadingPoolTokens, setLoadingPoolTokens] = useState<boolean>(false)
   const [tokens, setTokens] = useState<any>([])
+  const [loadingInfo, setLoadingInfo] = useState(true)
 
   const getFarmingPools = useCallback(async () => {
+    setLoadingInfo(true)
     try {
       const stakingPoolManager = new ethers.Contract(SuppotedStakingPoolManagerContractAddress(provider?._network.chainId), ManagerABI.abi, signer);
       // Get all staking pool addresses from staking pool manager
@@ -67,7 +69,9 @@ const useFarm = () => {
         });
       }
       setFarmingPools(pools);
+      setLoadingInfo(false)
     } catch (error) {
+      setLoadingInfo(false)
       toast.error("Cannot fetch staking pools!");
       console.log(error);
     }
@@ -80,7 +84,8 @@ const useFarm = () => {
       const tx = await farmingPool.deposit(0);
       await tx.wait();
       toast.info(`Successfully harvest reward token! Transaction hash: ${tx.hash}`);
-      await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
+       //@ts-ignore
+       await getBlockNumber(configConnect, { chainId: provider?._network.chainId}).then((number : any) => setCurrentBlock(Number(number)));
       await getFarmingPools();
     } catch (error) {
       toast.error("Cannot harvest token!");
@@ -142,8 +147,9 @@ const useFarm = () => {
       setRewardPerBlock(100);
       setStartBlock(0);
       setEndBlock(0);
-      await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
       getFarmingPools()
+       //@ts-ignore
+       await getBlockNumber(configConnect, { chainId: provider?._network.chainId}).then((number : any) => setCurrentBlock(Number(number)));
     } catch (error) {
       toast.error("Cannot create farming pool!");
       console.log(error);
@@ -154,7 +160,8 @@ const useFarm = () => {
   useEffect(() => {
      const init = async () => {
         if (address && signer) {
-            await getBlockNumber(configConnect).then((number : any) => setCurrentBlock(number));
+            //@ts-ignore
+            await getBlockNumber(configConnect, { chainId: provider?._network.chainId}).then((number : any) => setCurrentBlock(Number(number)));
             getFarmingPools();
           }
         getLiquidityPools(provider).then(pools => {
@@ -202,6 +209,7 @@ const useFarm = () => {
         handleClick,
         handleHarvest,
         farmingPools,
+        loadingInfo,
     }
 }
 

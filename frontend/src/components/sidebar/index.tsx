@@ -24,10 +24,10 @@ const SideBar = ({ user } : any) => {
   return (
     <div
       className={cn(
-        'bg-cream dark:bg-neutral-950 h-screen w-[60px] fill-mode-forwards fixed md:relative',
+        'bg-cream dark:bg-neutral-950 h-screen w-[250px] fill-mode-forwards fixed ',
         expand == undefined && '',
         expand == true
-          ? 'animate-open-sidebar'
+          ? 'animate-open-sidebar !w-[250px]'
           : expand == false && 'animate-close-sidebar'
       )}
     >

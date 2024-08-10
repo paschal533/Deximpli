@@ -19,6 +19,7 @@ const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
   const [stakedAmount, setStakedAmount] = useState<any>(0);
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [loadingInfo, setLoadingInfo] = useState(true)
 
   const getStakedToken = useCallback(async (poolAddress : any) => {
     if (Object.keys(stakedToken).length > 0) {
@@ -29,6 +30,7 @@ const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
       const _stakedToken = await getTokenInfo(await stakingPool.stakedToken(), provider);
       setStakedToken(_stakedToken);
       setStakingPoolAddress(poolAddress);
+      setLoadingInfo(false)
     } catch (error) {
       toast.error(`Cannot get the information of staked token with staking pool address ${poolAddress}!`);
       console.error(error);
@@ -88,7 +90,7 @@ const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
     return <p className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>Please connect to a wallet to stake</p>;
   } 
 
-  return <Grid container>
+  return <div> {loadingInfo ? (<div className=' p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'><CircularProgress /></div>) : <Grid container>
     <Grid item>
       <Grid container columnGap={12} className='mb-4'>
         <Grid item>
@@ -123,7 +125,7 @@ const Withdraw = ({ poolAddress } : { poolAddress : any}) => {
         <Grid item xs={4}></Grid>
       </div>
     </Grid>
-  </Grid >;
+  </Grid >}</div>
 }
 
 export default Withdraw;

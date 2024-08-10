@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { TokenPairABI } from '@/utils/TokenPairABI';
 import AMMRouterAddress from '@/contracts/AMMRouter-address.json';
 import AMMRouterABI from '@/contracts/AMMRouter.json';
+import { SuppotedPairFactoryContractAddress, SuppotedAMMRouterContractAddress } from '@/utils/Tokens';
 import { useEthersProvider, useEthersSigner } from '@/components/Wallet';
 import { ethers } from 'ethers';
 import { getErrorMessage, getTokenInfo, toString, isETH } from '@/utils/Helper';
@@ -44,7 +45,7 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
       toast.error(getErrorMessage(error, "Cannot fetch token information for the pair!"), { toastId: 'PAIR_0' })
       console.error(error);
     }
-  }, [signer]);
+  }, [signer, provider]);
 
   const getBalance = useCallback(async () => {
     try {
@@ -83,13 +84,13 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
   const getAllowance = useCallback(async () => {
     try {
       const tokenPair = new ethers.Contract(pair, TokenPairABI, signer);
-      const _allowAmount = await tokenPair.allowance(address, AMMRouterAddress.address);
+      const _allowAmount = await tokenPair.allowance(address, SuppotedAMMRouterContractAddress(provider?._network.chainId));
       setAllowAmount(ethers.utils.formatUnits(_allowAmount));
     } catch (error) {
       toast.error(getErrorMessage(error, "Cannot get allowance of token pair!"));
       console.error(error);
     }
-  }, [address, signer, pair]);
+  }, [address, signer, pair, provider?._network.chainId]);
 
   useEffect(() => {
     if (liquidityPair && address) {
@@ -119,7 +120,7 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
     try {
       const tokenPair = new ethers.Contract(pair, TokenPairABI, signer);
       const _allowAmount = ethers.utils.parseUnits(toString(amount));
-      const tx = await tokenPair.approve(AMMRouterAddress.address, _allowAmount);
+      const tx = await tokenPair.approve(SuppotedAMMRouterContractAddress(provider?._network.chainId), _allowAmount);
       await tx.wait();
       toast.info("Liquidity removal is enabled!");
       await getAllowance();
@@ -133,14 +134,14 @@ const RemoveLiquidity = ({ liquidityPair } : { liquidityPair : any }) => {
   const handleRemoveLiquidity = async () => {
     setLoading(true);
     try {
-      const ammRouter = new ethers.Contract(AMMRouterAddress.address, AMMRouterABI.abi, signer);
+      const ammRouter = new ethers.Contract(SuppotedAMMRouterContractAddress(provider?._network.chainId), AMMRouterABI.abi, signer);
       //@ts-ignore
       const deadline = parseInt(new Date().getTime() / 1000) + 30;
       let tx;
-      if (isETH(tokenA)) {
+      if (isETH(tokenA, provider)) {
         tx = await ammRouter.removeLiquidityETH(tokenB.address,
           ethers.utils.parseUnits(toString(amount)), 0, 0, address, deadline);
-      } else if (isETH(tokenB)) {
+      } else if (isETH(tokenB, provider)) {
         tx = await ammRouter.removeLiquidityETH(tokenA.address,
           ethers.utils.parseUnits(toString(amount)), 0, 0, address, deadline);
       } else {

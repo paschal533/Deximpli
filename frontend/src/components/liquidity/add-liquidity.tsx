@@ -119,7 +119,7 @@ function AddLiquidity() {
         </Grid>}
         <Grid item xs={12}>
           <Button className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full" fullWidth
-            disabled={!allowA || !allowB || !availableBalance || amountA <= 0 || amountB <= 0}
+            disabled={!allowA || !allowB || !availableBalance || amountA <= 0 || amountB <= 0 }
             onClick={handleAddLiquidity}
           >
             {availableBalance ? (loading ? <CircularProgress sx={{ color: 'white' }} /> : "Supply") : "Insufficent Balance"}

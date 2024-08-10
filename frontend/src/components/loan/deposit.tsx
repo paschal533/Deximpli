@@ -107,7 +107,7 @@ const Deposit = ({ tokenAddress } : { tokenAddress : any}) => {
   if (!address) {
     return <p className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'>Please connect to a wallet</p>;
   } else if (Object.keys(token).length === 0) {
-    return <p className='h-[50px] text-center !font-medium !mt-2 bg-cream px-4 py-2 rounded-xl  w-full'> Please provide valid token in asset pool</p>
+    return <p className='h-[50px] text-center !font-medium !mt-2 px-4 py-2 rounded-xl  w-full'><CircularProgress sx={{ color: '#D7009A', height: "10px" }} /></p>
   }
 
   return <div>
@@ -138,11 +138,11 @@ const Deposit = ({ tokenAddress } : { tokenAddress : any}) => {
         <Grid item xs={4}></Grid>
         <div className='w-full flex space-x-2 p-2'>
           <Button className='!bg-cream w-1/2 text-[#D7009A] font-semibold rounded-lg' disabled={amount <= 0 || allow >= amount} fullWidth onClick={() => handleApprove()} >
-            {allow < amount && loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : "Approve"}
+            {allow < amount && loading ? <CircularProgress  sx={{ color: '#D7009A', height: 2 }} /> : "Approve"}
           </Button>
   
           <Button className='!bg-cream w-1/2 text-[#D7009A] font-semibold rounded-lg'  disabled={amount <= 0 || allow < amount || amount > balance} fullWidth onClick={() => handleDeposit()}>
-            {allow >= amount && loading ? <CircularProgress sx={{ color: '#D7009A' }} /> : "Deposit"}
+            {allow >= amount && loading ? <CircularProgress sx={{ color: '#D7009A', height: 2 }} /> : "Deposit"}
           </Button>
         </div>
         <Grid item xs={4}></Grid>

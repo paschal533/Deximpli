@@ -20,13 +20,15 @@ function ListStake() {
     expanded,
     handleClick,
     loading,
+    loadingStake,
     handleHarvest,
   } = useContext(StakeContext);
 
   return (
     <div className='w-full'>
     <Grid container direction="column">
-    {address ? <>
+    {address ? !loadingStake ?
+    <> 
       <FormGroup className='!border-b-0 !border-none'>
         <FormControlLabel className='!border-b-0 !border-none' label="Hide Expired Pools" control={<Checkbox checked={hideExpired} onChange={handleHideExpired} />} />
       </FormGroup>
@@ -97,7 +99,8 @@ function ListStake() {
             </div>
           </AccordionDetails>
         </Accordion>) : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>No Staking Pool Found</p>}
-    </> : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Please connect to a wallet to view staking pools.</p>}
+    </> : <div className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'><CircularProgress /></div> 
+    : <p className='bg-cream p-3 items-center flex justify-center h-[100px] text-center rounded-lg mt-2 font-semibold'>Please connect to a wallet to view staking pools.</p>}
   </Grid>
   </div>
 )

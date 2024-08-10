@@ -1,4 +1,4 @@
-import { BaseAddresses, ModeTestnetAddresses, OptimismAddresses, CeloAlfajoresAddresses } from '@/contracts/contractAddresses';
+import { BaseAddresses, ModeTestnetAddresses, OptimismAddresses, CeloAlfajoresAddresses } from './contractAddresses'
 
 export const SuppotedTokens = (currentChainId : any ) => {
   switch(currentChainId) {
