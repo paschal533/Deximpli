@@ -27,10 +27,10 @@ function Banner() {
       <section className="md:mt-32 mt-32 mb-10 w-full flex flex-wrap  max-w-[1300px] h-full items-center content-center place-content-center justify-center align-middle">
         <section className="w-full flex flex-col md:w-1/2">
           <Slide>
-            <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-center text-7xl font-bold leading-none text-transparent">
+            <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-7xl font-bold leading-none text-transparent">
               A Smarter Way{" "}
             </h1>
-            <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-center text-7xl font-bold leading-none text-transparent">
+            <h1 className="pointer-events-none z-10 whitespace-pre-wrap bg-gradient-to-b from-[#D7009A] via-[#ff2975] to-[#8c1eff] bg-clip-text text-7xl font-bold leading-none text-transparent">
               To Trade Crypto
             </h1>
 
