@@ -1,4 +1,5 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+"use client";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export const ConnectBTN = () => {
   return (
@@ -14,28 +15,31 @@ export const ConnectBTN = () => {
       }) => {
         // Note: If your app doesn't use authentication, you
         // can remove all 'authenticationStatus' checks
-        const ready = mounted && authenticationStatus !== 'loading';
+        const ready = mounted && authenticationStatus !== "loading";
         const connected =
           ready &&
           account &&
           chain &&
-          (!authenticationStatus ||
-            authenticationStatus === 'authenticated');
+          (!authenticationStatus || authenticationStatus === "authenticated");
         return (
           <div
             {...(!ready && {
-              'aria-hidden': true,
-              'style': {
+              "aria-hidden": true,
+              style: {
                 opacity: 0,
-                pointerEvents: 'none',
-                userSelect: 'none',
+                pointerEvents: "none",
+                userSelect: "none",
               },
             })}
           >
             {(() => {
               if (!connected) {
                 return (
-                  <button className='h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full' onClick={openConnectModal} type="button">
+                  <button
+                    className="h-[50px] font-semibold text-[#D7009A] justify-center items-center flex bg-cream rounded-xl mt-2  w-full"
+                    onClick={openConnectModal}
+                    type="button"
+                  >
                     Connect Wallet
                   </button>
                 );
@@ -48,10 +52,10 @@ export const ConnectBTN = () => {
                 );
               }
               return (
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ display: "flex", gap: 12 }}>
                   <button
                     onClick={openChainModal}
-                    style={{ display: 'flex', alignItems: 'center' }}
+                    style={{ display: "flex", alignItems: "center" }}
                     type="button"
                   >
                     {chain.hasIcon && (
@@ -61,13 +65,13 @@ export const ConnectBTN = () => {
                           width: 12,
                           height: 12,
                           borderRadius: 999,
-                          overflow: 'hidden',
+                          overflow: "hidden",
                           marginRight: 4,
                         }}
                       >
                         {chain.iconUrl && (
                           <img
-                            alt={chain.name ?? 'Chain icon'}
+                            alt={chain.name ?? "Chain icon"}
                             src={chain.iconUrl}
                             style={{ width: 12, height: 12 }}
                           />
@@ -80,7 +84,7 @@ export const ConnectBTN = () => {
                     {account.displayName}
                     {account.displayBalance
                       ? ` (${account.displayBalance})`
-                      : ''}
+                      : ""}
                   </button>
                 </div>
               );

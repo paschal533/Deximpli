@@ -5,13 +5,13 @@ import React, { forwardRef, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/magicui/animated-beam";
 import Image from "next/image";
-import Op from "../../../public/images/optimism.png"
-import mode from "../../../public/images/mode.png"
-import celo from "../../../public/images/celo.png"
-import base from "../../../public/images/base.png"
-import logo from "../../../public/images/logo-tab.png"
-import eth from "../../../public/images/eth.png"
-import binace from "../../../public/images/bnb.png"
+import Op from "../../../public/images/optimism.png";
+import mode from "../../../public/images/mode.png";
+import celo from "../../../public/images/celo.png";
+import base from "../../../public/images/base.png";
+import logo from "../../../public/images/logo-tab.png";
+import eth from "../../../public/images/eth.png";
+import binace from "../../../public/images/bnb.png";
 
 const Circle = forwardRef<
   HTMLDivElement,
@@ -50,29 +50,29 @@ export function AnimatedBeamDemo() {
       <div className="flex size-full flex-col max-w-lg max-h-[200px] items-stretch justify-between gap-10">
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div1Ref}>
-            <Image src={Op} height={30} width={30} alt="network"  />
+            <Image src={Op} height={30} width={30} alt="network" />
           </Circle>
           <Circle ref={div5Ref}>
-            <Image src={celo} height={30} width={30} alt="network"  />
+            <Image src={celo} height={30} width={30} alt="network" />
           </Circle>
         </div>
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div2Ref}>
-            <Image src={base} height={30} width={30} alt="network"  />
+            <Image src={base} height={30} width={30} alt="network" />
           </Circle>
           <Circle ref={div4Ref} className="size-16">
-            <Image src={logo} height={30} width={30} alt="network"  />
+            <Image src={logo} height={30} width={30} alt="network" />
           </Circle>
           <Circle ref={div6Ref}>
-            <Image src={binace} height={30} width={30} alt="network"  />
+            <Image src={binace} height={30} width={30} alt="network" />
           </Circle>
         </div>
         <div className="flex flex-row items-center justify-between">
           <Circle ref={div3Ref}>
-            <Image src={mode} height={30} width={30} alt="network"  />
+            <Image src={mode} height={30} width={30} alt="network" />
           </Circle>
           <Circle ref={div7Ref}>
-           <Image src={eth} height={30} width={30} alt="network"  />
+            <Image src={eth} height={30} width={30} alt="network" />
           </Circle>
         </div>
       </div>

@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const StarIcon = (props: Props) => {
   return (
@@ -19,7 +19,7 @@ const StarIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default StarIcon
+export default StarIcon;

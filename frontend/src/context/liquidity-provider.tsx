@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import useLiquidity from "@/hooks/useLiquidity";
 
@@ -13,5 +13,9 @@ interface Props {
 export const LiquidityProvider = ({ children }: Props) => {
   const value = useLiquidity();
 
-  return <LiquidityContext.Provider value={value}>{children}</LiquidityContext.Provider>;
+  return (
+    <LiquidityContext.Provider value={value}>
+      {children}
+    </LiquidityContext.Provider>
+  );
 };

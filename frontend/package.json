@@ -1,12 +1,14 @@
 {
-  "name": "Deximpli",
+  "name": "deximpli",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@account-abstraction/utils": "^0.6.0",
@@ -17,9 +19,9 @@
     "@ethersproject/providers": "^5.7.2",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.4",
-    "@prisma/client": "^5.13.0",
     "@mui/icons-material": "^5.16.6",
     "@mui/material": "^5.11.13",
+    "@prisma/client": "^5.13.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -91,6 +93,7 @@
     "zod": "^3.23.6"
   },
   "devDependencies": {
+    "@types/circomlibjs": "^0.1.6",
     "@types/express": "^4.17.21",
     "@types/node": "^20",
     "@types/react": "^18",

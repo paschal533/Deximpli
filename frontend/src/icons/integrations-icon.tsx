@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const IntegrationsIcon = (props: Props) => {
   return (
@@ -58,7 +58,7 @@ const IntegrationsIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default IntegrationsIcon
+export default IntegrationsIcon;

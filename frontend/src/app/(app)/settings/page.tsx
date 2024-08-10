@@ -1,8 +1,8 @@
-import InfoBar from '@/components/infobar'
-import DarkModetoggle from '@/components/settings/dark-mode'
-import React from 'react'
+import InfoBar from "@/components/infobar";
+import DarkModetoggle from "@/components/settings/dark-mode";
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const Page = (props: Props) => {
   return (
@@ -12,7 +12,7 @@ const Page = (props: Props) => {
         <DarkModetoggle />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

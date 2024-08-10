@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export const TransactionsIcon = () => {
   return (
@@ -45,5 +45,5 @@ export const TransactionsIcon = () => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};

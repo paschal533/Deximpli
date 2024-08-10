@@ -1,15 +1,15 @@
-'use client'
-import { INTEGRATION_LIST_ITEMS } from '@/constants/integrations'
-import React from 'react'
-import { Card, CardContent, CardDescription } from '../ui/card'
-import Image from 'next/image'
-import IntegrationTrigger from './IntegrationTrigger'
+"use client";
+import { INTEGRATION_LIST_ITEMS } from "@/constants/integrations";
+import React from "react";
+import { Card, CardContent, CardDescription } from "../ui/card";
+import Image from "next/image";
+import IntegrationTrigger from "./IntegrationTrigger";
 
 type Props = {
   connections: {
-    stripe: boolean
-  }
-}
+    stripe: boolean;
+  };
+};
 
 const IntegrationsList = ({ connections }: Props) => {
   return (
@@ -42,7 +42,7 @@ const IntegrationsList = ({ connections }: Props) => {
         </Card>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default IntegrationsList
+export default IntegrationsList;

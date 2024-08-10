@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const MoneyIcon = (props: Props) => {
   return (
@@ -40,7 +40,7 @@ const MoneyIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default MoneyIcon
+export default MoneyIcon;

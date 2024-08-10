@@ -1,24 +1,24 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React from "react";
 
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-import { ErrorMessage } from '@hookform/error-message'
-import { Loader } from '@/components/loader'
-import FormGenerator from '../forms/form-generator'
-import { UploadIcon } from 'lucide-react'
-import { useProducts } from '@/hooks/settings/use-settings'
+import { ErrorMessage } from "@hookform/error-message";
+import { Loader } from "@/components/loader";
+import FormGenerator from "../forms/form-generator";
+import { UploadIcon } from "lucide-react";
+import { useProducts } from "@/hooks/settings/use-settings";
 
 type CreateProductFormProps = {
-  id: string
-}
+  id: string;
+};
 
 export const CreateProductForm = ({ id }: CreateProductFormProps) => {
-  const { onCreateNewProduct, register, errors, loading } = useProducts(id)
+  const { onCreateNewProduct, register, errors, loading } = useProducts(id);
   return (
     <form
       className="mt-3 w-full flex flex-col gap-5 py-10"
@@ -39,7 +39,7 @@ export const CreateProductForm = ({ id }: CreateProductFormProps) => {
           className="flex gap-2 p-3 rounded-lg bg-peach text-gray-600 cursor-pointer font-semibold text-sm items-center"
         >
           <Input
-            {...register('image')}
+            {...register("image")}
             className="hidden"
             type="file"
             id="upload-product"
@@ -52,7 +52,7 @@ export const CreateProductForm = ({ id }: CreateProductFormProps) => {
           name="image"
           render={({ message }) => (
             <p className="text-red-400 mt-2">
-              {message === 'Required' ? '' : message}
+              {message === "Required" ? "" : message}
             </p>
           )}
         />
@@ -66,12 +66,9 @@ export const CreateProductForm = ({ id }: CreateProductFormProps) => {
         placeholder="0.00"
         type="text"
       />
-      <Button
-        type="submit"
-        className="w-full"
-      >
+      <Button type="submit" className="w-full">
         <Loader loading={loading}>Create Product</Loader>
       </Button>
     </form>
-  )
-}
+  );
+};

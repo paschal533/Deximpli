@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,36 +6,33 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { ArrowBigLeftIcon, ArrowLeft, ArrowRight } from 'lucide-react'
-import Image from 'next/image'
+} from "@/components/ui/dialog";
+import { ArrowBigLeftIcon, ArrowLeft, ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 type Props = {
-  trigger: React.ReactNode
-  children: React.ReactNode
-  title: string
-  type?: 'Integration'
-}
+  trigger: React.ReactNode;
+  children: React.ReactNode;
+  title: string;
+  type?: "Integration";
+};
 
-const Modal = ({
-  trigger,
-  children,
-  title,
-  type,
-}: Props) => {
+const Modal = ({ trigger, children, title, type }: Props) => {
   switch (type) {
-    case 'Integration':
+    case "Integration":
       return (
         <Dialog>
           <DialogTrigger asChild>{trigger}</DialogTrigger>
           <DialogContent>
             <DialogHeader className="flex">
-              <DialogTitle className="text-md font-md mb-4">{title}</DialogTitle>
+              <DialogTitle className="text-md font-md mb-4">
+                {title}
+              </DialogTitle>
             </DialogHeader>
             {children}
           </DialogContent>
         </Dialog>
-      )
+      );
     default:
       return (
         <Dialog>
@@ -43,13 +40,12 @@ const Modal = ({
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-xl">{title}</DialogTitle>
-               
             </DialogHeader>
             {children}
           </DialogContent>
         </Dialog>
-      )
+      );
   }
-}
+};
 
-export default Modal
+export default Modal;

@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const TimerIcon = (props: Props) => {
   return (
@@ -26,7 +26,7 @@ const TimerIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default TimerIcon
+export default TimerIcon;

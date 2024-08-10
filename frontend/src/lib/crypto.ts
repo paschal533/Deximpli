@@ -20,7 +20,7 @@ function stringToCircomArray(input: string, maxLength: number = 16): bigint[] {
 
   const circomArray: bigint[] = partitionedArray.map((partition) => {
     const paddedPartition = partition.concat(
-      new Array(CIRCOM_ARRAY_PARTITION - partition.length).fill(0)
+      new Array(CIRCOM_ARRAY_PARTITION - partition.length).fill(0),
     );
 
     return arrayToBase256Number(paddedPartition);

@@ -1,18 +1,18 @@
-import React from 'react'
+import React from "react";
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
   DrawerTitle,
   DrawerTrigger,
-} from '../ui/drawer'
+} from "../ui/drawer";
 
 type Props = {
-  onOpen: JSX.Element
-  children: React.ReactNode
-  title: string
-  description: string
-}
+  onOpen: JSX.Element;
+  children: React.ReactNode;
+  title: string;
+  description: string;
+};
 
 const AppDrawer = ({ children, description, onOpen, title }: Props) => {
   return (
@@ -26,7 +26,7 @@ const AppDrawer = ({ children, description, onOpen, title }: Props) => {
         </div>
       </DrawerContent>
     </Drawer>
-  )
-}
+  );
+};
 
-export default AppDrawer
+export default AppDrawer;

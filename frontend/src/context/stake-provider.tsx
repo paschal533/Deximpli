@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import useStake from "@/hooks/useStake";
 
@@ -13,5 +13,7 @@ interface Props {
 export const StakeProvider = ({ children }: Props) => {
   const value = useStake();
 
-  return <StakeContext.Provider value={value}>{children}</StakeContext.Provider>;
+  return (
+    <StakeContext.Provider value={value}>{children}</StakeContext.Provider>
+  );
 };

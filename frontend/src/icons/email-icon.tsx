@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const EmailIcon = (props: Props) => {
   return (
@@ -26,7 +26,7 @@ const EmailIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default EmailIcon
+export default EmailIcon;

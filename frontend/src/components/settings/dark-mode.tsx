@@ -1,16 +1,16 @@
-'use client'
-import { useThemeMode } from '@/hooks/settings/use-settings'
-import React from 'react'
-import Section from '../section-label'
-import { cn } from '@/lib/utils'
-import { SystemMode } from '../themes-placeholder/systemmode'
-import { LightMode } from '../themes-placeholder/lightmode'
-import { DarkMode } from '../themes-placeholder/darkmode'
+"use client";
+import { useThemeMode } from "@/hooks/settings/use-settings";
+import React from "react";
+import Section from "../section-label";
+import { cn } from "@/lib/utils";
+import { SystemMode } from "../themes-placeholder/systemmode";
+import { LightMode } from "../themes-placeholder/lightmode";
+import { DarkMode } from "../themes-placeholder/darkmode";
 
-type Props = {}
+type Props = {};
 
 const DarkModetoggle = (props: Props) => {
-  const { setTheme, theme } = useThemeMode()
+  const { setTheme, theme } = useThemeMode();
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
@@ -23,34 +23,34 @@ const DarkModetoggle = (props: Props) => {
       <div className="lg:col-span-4 flex lg:flex-row flex-col items-start gap-5">
         <div
           className={cn(
-            'rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent',
-            theme == 'system' && 'border-orange'
+            "rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent",
+            theme == "system" && "border-orange",
           )}
-          onClick={() => setTheme('system')}
+          onClick={() => setTheme("system")}
         >
           <SystemMode />
         </div>
         <div
           className={cn(
-            'rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent',
-            theme == 'light' && 'border-orange'
+            "rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent",
+            theme == "light" && "border-orange",
           )}
-          onClick={() => setTheme('light')}
+          onClick={() => setTheme("light")}
         >
           <LightMode />
         </div>
         <div
           className={cn(
-            'rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent',
-            theme == 'dark' && 'border-orange'
+            "rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent",
+            theme == "dark" && "border-orange",
           )}
-          onClick={() => setTheme('dark')}
+          onClick={() => setTheme("dark")}
         >
           <DarkMode />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DarkModetoggle
+export default DarkModetoggle;

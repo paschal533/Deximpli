@@ -1,34 +1,34 @@
-'use client'
-import useSideBar from '@/context/use-sidebar'
-import { cn } from '@/lib/utils'
-import React from 'react'
-import MaxMenu from './maximized-menu'
-import { MinMenu } from './minimized-menu'
+"use client";
+import useSideBar from "@/context/use-sidebar";
+import { cn } from "@/lib/utils";
+import React from "react";
+import MaxMenu from "./maximized-menu";
+import { MinMenu } from "./minimized-menu";
 
 type Props = {
   domains:
     | {
-        id: string
-        name: string
-        icon: string
+        id: string;
+        name: string;
+        icon: string;
       }[]
     | null
-    | undefined
-}
+    | undefined;
+};
 
-const SideBar = ({ user } : any) => {
-  const { expand, onExpand, page } = useSideBar()
+const SideBar = ({ user }: any) => {
+  const { expand, onExpand, page } = useSideBar();
 
   const onSignOut = () => {};
 
   return (
     <div
       className={cn(
-        'bg-cream dark:bg-neutral-950 h-screen w-[250px] fill-mode-forwards fixed ',
-        expand == undefined && '',
+        "bg-cream dark:bg-neutral-950 h-screen w-[250px] fill-mode-forwards fixed ",
+        expand == undefined && "",
         expand == true
-          ? 'animate-open-sidebar !w-[250px]'
-          : expand == false && 'animate-close-sidebar'
+          ? "animate-open-sidebar !w-[250px]"
+          : expand == false && "animate-close-sidebar",
       )}
     >
       {expand ? (
@@ -47,7 +47,7 @@ const SideBar = ({ user } : any) => {
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SideBar
+export default SideBar;

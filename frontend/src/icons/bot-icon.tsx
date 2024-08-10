@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export const BotIcon = () => {
   return (
@@ -24,5 +24,5 @@ export const BotIcon = () => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};

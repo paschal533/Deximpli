@@ -1,17 +1,13 @@
-
-import { cookieStorage, createStorage } from 'wagmi'
-import {
-  getDefaultConfig,
-  Chain,
-} from '@rainbow-me/rainbowkit';
-import { http, createConfig } from '@wagmi/core'
+import { cookieStorage, createStorage } from "wagmi";
+import { getDefaultConfig, Chain } from "@rainbow-me/rainbowkit";
+import { http, createConfig } from "@wagmi/core";
 import {
   baseSepolia,
   optimismSepolia,
   modeTestnet,
   celoAlfajores,
-  localhost
-} from 'wagmi/chains';
+  localhost,
+} from "wagmi/chains";
 
 export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 
@@ -20,15 +16,15 @@ export const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 
 // Create wagmiConfig
 export const config = getDefaultConfig({
-  appName: 'Deximpli',
+  appName: "Deximpli",
   //@ts-ignore
   projectId: projectId,
   chains: [modeTestnet, baseSepolia, optimismSepolia, celoAlfajores, localhost],
   ssr: true,
   storage: createStorage({
-    storage: cookieStorage
-  })
-})
+    storage: cookieStorage,
+  }),
+});
 
 export const configConnect = createConfig({
   chains: [modeTestnet, baseSepolia, optimismSepolia, celoAlfajores, localhost],
@@ -39,4 +35,4 @@ export const configConnect = createConfig({
     [celoAlfajores.id]: http(),
     [localhost.id]: http(),
   },
-})
+});

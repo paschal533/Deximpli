@@ -41,7 +41,7 @@ export const Tabs = ({
       <div
         className={cn(
           "flex flex-row items-center relative overflow-auto sm:overflow-visible no-visible-scrollbar max-w-full w-full",
-          containerClassName
+          containerClassName,
         )}
       >
         {propTabs.map((tab, idx) => (
@@ -63,7 +63,7 @@ export const Tabs = ({
                 transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
                 className={cn(
                   "absolute inset-0 bg-gray-200 dark:bg-zinc-800 rounded-full ",
-                  activeTabClassName
+                  activeTabClassName,
                 )}
               />
             )}
@@ -108,9 +108,8 @@ export const FadeInDiv = ({
           style={{
             zIndex: -idx,
             opacity: idx < 3 ? 1 - idx * 0.1 : 0,
-            display: isActive(tab) ?  "block" : "none",
+            display: isActive(tab) ? "block" : "none",
           }}
-          
           className={cn("w-full h-full absolute", className)}
         >
           {tab.content}

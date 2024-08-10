@@ -1,13 +1,13 @@
-'use client'
-import React from 'react'
+"use client";
+import React from "react";
 
-import { Progress } from '@/components/ui/progress'
+import { Progress } from "@/components/ui/progress";
 
 type ProgressBarProps = {
-  label: string
-  end: number
-  credits: number
-}
+  label: string;
+  end: number;
+  credits: number;
+};
 
 export const ProgressBar = ({ label, end, credits }: ProgressBarProps) => {
   return (
@@ -18,11 +18,8 @@ export const ProgressBar = ({ label, end, credits }: ProgressBarProps) => {
           <p>{credits}</p>
           <p>{end}</p>
         </div>
-        <Progress
-          value={(credits / end) * 100}
-          className="w-full"
-        />
+        <Progress value={(credits / end) * 100} className="w-full" />
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,11 +1,11 @@
-import { http, createConfig } from '@wagmi/core'
+import { http, createConfig } from "@wagmi/core";
 import {
   baseSepolia,
   optimismSepolia,
   modeTestnet,
   celoAlfajores,
-  localhost
-} from 'wagmi/chains';
+  localhost,
+} from "wagmi/chains";
 
 export const publicClient = createConfig({
   chains: [baseSepolia, optimismSepolia, modeTestnet, celoAlfajores, localhost],
@@ -16,5 +16,4 @@ export const publicClient = createConfig({
     [celoAlfajores.id]: http(),
     [localhost.id]: http(),
   },
-})
-
+});

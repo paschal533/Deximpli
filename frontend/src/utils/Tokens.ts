@@ -1,23 +1,52 @@
-import { BaseAddresses, ModeTestnetAddresses, OptimismAddresses, CeloAlfajoresAddresses } from './contractAddresses'
+import {
+  BaseAddresses,
+  ModeTestnetAddresses,
+  OptimismAddresses,
+  CeloAlfajoresAddresses,
+} from "./contractAddresses";
 
-export const SuppotedTokens = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedTokens = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
-      return [BaseAddresses.SimpleDeFiTokenContractAddress, BaseAddresses.MemeTokenContractAddress, BaseAddresses.FooTokenContractAddress, BaseAddresses.BarTokenContractAddress];
+      return [
+        BaseAddresses.SimpleDeFiTokenContractAddress,
+        BaseAddresses.MemeTokenContractAddress,
+        BaseAddresses.FooTokenContractAddress,
+        BaseAddresses.BarTokenContractAddress,
+      ];
     case 11155420:
-      return [OptimismAddresses.SimpleDeFiTokenContractAddress, OptimismAddresses.MemeTokenContractAddress, OptimismAddresses.FooTokenContractAddress, OptimismAddresses.BarTokenContractAddress];
+      return [
+        OptimismAddresses.SimpleDeFiTokenContractAddress,
+        OptimismAddresses.MemeTokenContractAddress,
+        OptimismAddresses.FooTokenContractAddress,
+        OptimismAddresses.BarTokenContractAddress,
+      ];
     case 44787:
-      return [CeloAlfajoresAddresses.SimpleDeFiTokenContractAddress, CeloAlfajoresAddresses.MemeTokenContractAddress, CeloAlfajoresAddresses.FooTokenContractAddress, CeloAlfajoresAddresses.BarTokenContractAddress];
+      return [
+        CeloAlfajoresAddresses.SimpleDeFiTokenContractAddress,
+        CeloAlfajoresAddresses.MemeTokenContractAddress,
+        CeloAlfajoresAddresses.FooTokenContractAddress,
+        CeloAlfajoresAddresses.BarTokenContractAddress,
+      ];
     case 919:
-      return [ModeTestnetAddresses.SimpleDeFiTokenContractAddress, ModeTestnetAddresses.MemeTokenContractAddress, ModeTestnetAddresses.FooTokenContractAddress, ModeTestnetAddresses.BarTokenContractAddress];
+      return [
+        ModeTestnetAddresses.SimpleDeFiTokenContractAddress,
+        ModeTestnetAddresses.MemeTokenContractAddress,
+        ModeTestnetAddresses.FooTokenContractAddress,
+        ModeTestnetAddresses.BarTokenContractAddress,
+      ];
     default:
-      return [ModeTestnetAddresses.SimpleDeFiTokenContractAddress, ModeTestnetAddresses.MemeTokenContractAddress, ModeTestnetAddresses.FooTokenContractAddress, ModeTestnetAddresses.BarTokenContractAddress];
+      return [
+        ModeTestnetAddresses.SimpleDeFiTokenContractAddress,
+        ModeTestnetAddresses.MemeTokenContractAddress,
+        ModeTestnetAddresses.FooTokenContractAddress,
+        ModeTestnetAddresses.BarTokenContractAddress,
+      ];
   }
-    
-}
+};
 
-export const SuppotedWrappedETHContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedWrappedETHContractAddress = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.WrappedETHContractAddress;
     case 11155420:
@@ -25,15 +54,14 @@ export const SuppotedWrappedETHContractAddress = (currentChainId : any ) => {
     case 44787:
       return CeloAlfajoresAddresses.WrappedETHContractAddress;
     case 919:
-      return ModeTestnetAddresses.WrappedETHContractAddress
+      return ModeTestnetAddresses.WrappedETHContractAddress;
     default:
-      return ModeTestnetAddresses.WrappedETHContractAddress
+      return ModeTestnetAddresses.WrappedETHContractAddress;
   }
-    
-}
+};
 
-export const SuppotedPairFactoryContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedPairFactoryContractAddress = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.PairFactoryContractAddress;
     case 11155420:
@@ -41,15 +69,14 @@ export const SuppotedPairFactoryContractAddress = (currentChainId : any ) => {
     case 44787:
       return CeloAlfajoresAddresses.PairFactoryContractAddress;
     case 919:
-      return ModeTestnetAddresses.PairFactoryContractAddress
+      return ModeTestnetAddresses.PairFactoryContractAddress;
     default:
-      return ModeTestnetAddresses.PairFactoryContractAddress
+      return ModeTestnetAddresses.PairFactoryContractAddress;
   }
-    
-}
+};
 
-export const SuppotedAMMRouterContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedAMMRouterContractAddress = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.AMMRouterContractAddress;
     case 11155420:
@@ -57,15 +84,16 @@ export const SuppotedAMMRouterContractAddress = (currentChainId : any ) => {
     case 44787:
       return CeloAlfajoresAddresses.AMMRouterContractAddress;
     case 919:
-      return ModeTestnetAddresses.AMMRouterContractAddress
+      return ModeTestnetAddresses.AMMRouterContractAddress;
     default:
-      return ModeTestnetAddresses.AMMRouterContractAddress
+      return ModeTestnetAddresses.AMMRouterContractAddress;
   }
-    
-}
+};
 
-export const SuppotedStakingPoolManagerContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedStakingPoolManagerContractAddress = (
+  currentChainId: any,
+) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.StakingPoolManagerContractAddress;
     case 11155420:
@@ -73,15 +101,16 @@ export const SuppotedStakingPoolManagerContractAddress = (currentChainId : any )
     case 44787:
       return CeloAlfajoresAddresses.StakingPoolManagerContractAddress;
     case 919:
-      return ModeTestnetAddresses.StakingPoolManagerContractAddress
+      return ModeTestnetAddresses.StakingPoolManagerContractAddress;
     default:
-      return ModeTestnetAddresses.StakingPoolManagerContractAddress
+      return ModeTestnetAddresses.StakingPoolManagerContractAddress;
   }
-    
-}
+};
 
-export const SuppotedAssetPoolShareDeployerContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedAssetPoolShareDeployerContractAddress = (
+  currentChainId: any,
+) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.AssetPoolShareDeployerContractAddress;
     case 11155420:
@@ -89,14 +118,13 @@ export const SuppotedAssetPoolShareDeployerContractAddress = (currentChainId : a
     case 44787:
       return CeloAlfajoresAddresses.AssetPoolShareDeployerContractAddress;
     case 919:
-      return ModeTestnetAddresses.AssetPoolShareDeployerContractAddress
+      return ModeTestnetAddresses.AssetPoolShareDeployerContractAddress;
     default:
-      return ModeTestnetAddresses.AssetPoolShareDeployerContractAddress
+      return ModeTestnetAddresses.AssetPoolShareDeployerContractAddress;
   }
-    
-}
-export const SuppotedPriceOraclev2ContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+};
+export const SuppotedPriceOraclev2ContractAddress = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.PriceOraclev2ContractAddress;
     case 11155420:
@@ -104,14 +132,13 @@ export const SuppotedPriceOraclev2ContractAddress = (currentChainId : any ) => {
     case 44787:
       return CeloAlfajoresAddresses.PriceOraclev2ContractAddress;
     case 919:
-      return ModeTestnetAddresses.PriceOraclev2ContractAddress
+      return ModeTestnetAddresses.PriceOraclev2ContractAddress;
     default:
-      return ModeTestnetAddresses.PriceOraclev2ContractAddress
+      return ModeTestnetAddresses.PriceOraclev2ContractAddress;
   }
-    
-}
-export const SuppotedAssetPoolContractAddress = (currentChainId : any ) => {
-  switch(currentChainId) {
+};
+export const SuppotedAssetPoolContractAddress = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.AssetPoolContractAddress;
     case 11155420:
@@ -119,14 +146,13 @@ export const SuppotedAssetPoolContractAddress = (currentChainId : any ) => {
     case 44787:
       return CeloAlfajoresAddresses.AssetPoolContractAddress;
     case 919:
-      return ModeTestnetAddresses.AssetPoolContractAddress
+      return ModeTestnetAddresses.AssetPoolContractAddress;
     default:
-      return ModeTestnetAddresses.AssetPoolContractAddress
+      return ModeTestnetAddresses.AssetPoolContractAddress;
   }
-    
-}
-export const SuppotedPoolConfiguration = (currentChainId : any ) => {
-  switch(currentChainId) {
+};
+export const SuppotedPoolConfiguration = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
       return BaseAddresses.PoolConfiguration;
     case 11155420:
@@ -134,43 +160,38 @@ export const SuppotedPoolConfiguration = (currentChainId : any ) => {
     case 44787:
       return CeloAlfajoresAddresses.PoolConfiguration;
     case 919:
-      return ModeTestnetAddresses.PoolConfiguration
+      return ModeTestnetAddresses.PoolConfiguration;
     default:
-      return ModeTestnetAddresses.PoolConfiguration
+      return ModeTestnetAddresses.PoolConfiguration;
   }
-    
-}
+};
 
-export const SuppotedTokensBAR = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedTokensBAR = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
-      return  BaseAddresses.BarTokenContractAddress;
+      return BaseAddresses.BarTokenContractAddress;
     case 11155420:
       return OptimismAddresses.BarTokenContractAddress;
     case 44787:
-      return  CeloAlfajoresAddresses.BarTokenContractAddress;
+      return CeloAlfajoresAddresses.BarTokenContractAddress;
     case 919:
-      return  ModeTestnetAddresses.BarTokenContractAddress;
+      return ModeTestnetAddresses.BarTokenContractAddress;
     default:
-      return  ModeTestnetAddresses.BarTokenContractAddress;
+      return ModeTestnetAddresses.BarTokenContractAddress;
   }
-    
-}
+};
 
-export const SuppotedTokensFOO = (currentChainId : any ) => {
-  switch(currentChainId) {
+export const SuppotedTokensFOO = (currentChainId: any) => {
+  switch (currentChainId) {
     case 84532:
-      return  BaseAddresses.FooTokenContractAddress;
+      return BaseAddresses.FooTokenContractAddress;
     case 11155420:
       return OptimismAddresses.FooTokenContractAddress;
     case 44787:
-      return  CeloAlfajoresAddresses.FooTokenContractAddress;
+      return CeloAlfajoresAddresses.FooTokenContractAddress;
     case 919:
-      return  ModeTestnetAddresses.FooTokenContractAddress;
+      return ModeTestnetAddresses.FooTokenContractAddress;
     default:
-      return  ModeTestnetAddresses.FooTokenContractAddress;
+      return ModeTestnetAddresses.FooTokenContractAddress;
   }
-    
-}
-
-
+};

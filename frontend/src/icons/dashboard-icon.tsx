@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const DashboardIcon = (props: Props) => {
   return (
@@ -40,7 +40,7 @@ const DashboardIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default DashboardIcon
+export default DashboardIcon;

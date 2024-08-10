@@ -1,15 +1,9 @@
- 
-import { useTheme } from 'next-themes'
-
+import { useTheme } from "next-themes";
 
 export const useThemeMode = () => {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme } = useTheme();
   return {
     setTheme,
     theme,
-  }
-}
-
- 
-
- 
+  };
+};

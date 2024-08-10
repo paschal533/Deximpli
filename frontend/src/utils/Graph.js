@@ -2,15 +2,15 @@
 
 export const addNode = (graph, token) => {
   graph.set(token.address, { token, neighbor: new Set() });
-}
+};
 
 export const connectNodes = (graph, tokenA, tokenB) => {
   graph.get(tokenA.address).neighbor.add(tokenB.address);
   graph.get(tokenB.address).neighbor.add(tokenA.address);
-}
+};
 
-export const buildGraphFromEdges = edges => edges.reduce(
-  (graph, [tokenA, tokenB]) => {
+export const buildGraphFromEdges = (edges) =>
+  edges.reduce((graph, [tokenA, tokenB]) => {
     if (!graph.has(tokenA.address)) {
       addNode(graph, tokenA);
     }
@@ -19,8 +19,7 @@ export const buildGraphFromEdges = edges => edges.reduce(
     }
     connectNodes(graph, tokenA, tokenB);
     return graph;
-  }, new Map()
-);
+  }, new Map());
 
 const dfs = (address1, address2, graph, visited, path, result) => {
   if (address1 === address2) {
@@ -36,7 +35,7 @@ const dfs = (address1, address2, graph, visited, path, result) => {
     }
   }
   visited.delete(address1);
-}
+};
 
 export const findAllPaths = (address1, address2, graph) => {
   const path = [];
@@ -48,4 +47,4 @@ export const findAllPaths = (address1, address2, graph) => {
   const result = [];
   dfs(address1, address2, graph, visited, path, result);
   return result;
-}
+};

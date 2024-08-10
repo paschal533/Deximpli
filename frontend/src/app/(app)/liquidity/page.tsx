@@ -1,8 +1,7 @@
-import InfoBar from '@/components/infobar'
-import LiquidityTabs from '@/components/liquidity/tabs'
+import InfoBar from "@/components/infobar";
+import LiquidityTabs from "@/components/liquidity/tabs";
 
 const LiquidityPoolPage = async () => {
-   
   return (
     <>
       <InfoBar />
@@ -10,7 +9,7 @@ const LiquidityPoolPage = async () => {
         <LiquidityTabs />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default LiquidityPoolPage
+export default LiquidityPoolPage;

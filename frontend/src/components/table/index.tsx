@@ -4,13 +4,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { cn } from '@/lib/utils'
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 type DataTableProps = {
-  headers: string[]
-  children: React.ReactNode
-}
+  headers: string[];
+  children: React.ReactNode;
+};
 
 export const DataTable = ({ headers, children }: DataTableProps) => {
   return (
@@ -21,8 +21,8 @@ export const DataTable = ({ headers, children }: DataTableProps) => {
             <TableHead
               key={key}
               className={cn(
-                key == headers.length - 1 && 'text-right',
-                'text-black'
+                key == headers.length - 1 && "text-right",
+                "text-black",
               )}
             >
               {header}
@@ -32,5 +32,5 @@ export const DataTable = ({ headers, children }: DataTableProps) => {
       </TableHeader>
       <TableBody>{children}</TableBody>
     </Table>
-  )
-}
+  );
+};

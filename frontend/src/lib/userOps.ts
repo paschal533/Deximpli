@@ -15,7 +15,7 @@ import { publicClient } from "./wallet";
 
 const ENTRYPOINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
 const PAYMASTER_ADDRESS = "0xFB0AD3C188DC1D3D490C4e00aBF261Aa5613a25b";
-const EMAIL_FACTORY_ADDRESS = "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC"
+const EMAIL_FACTORY_ADDRESS = "0x324b6CBBbb2Ba4724290Ef53F1b68F5b46c61dBC";
 const CHAIN_ID = "421614";
 
 export const generateSendTokenCalldata = (
@@ -23,7 +23,6 @@ export const generateSendTokenCalldata = (
   amount: any,
   smartWallet: Address,
 ) => {
-
   const data = encodeFunctionData({
     abi: emailAccountAbi,
     functionName: "withdrawDepositTo",
@@ -78,10 +77,10 @@ export const signUserOps = async (userOp: any, account: PrivateKeyAccount) => {
   const userOpHash = getUserOpHash(
     userOp,
     ENTRYPOINT_ADDRESS,
-    Number.parseInt(CHAIN_ID)
+    Number.parseInt(CHAIN_ID),
   );
   console.log("userOpHash", userOpHash);
-vb
+  vb;
   userOp.signature = (await account.signMessage({
     message: {
       raw: userOpHash as `0x${string}`,

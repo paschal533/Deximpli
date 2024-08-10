@@ -5,15 +5,15 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet'
+} from "@/components/ui/sheet";
 
 type SideSheetProps = {
-  trigger: React.ReactNode
-  title: string
-  description: string
-  children: React.ReactNode
-  className?: string
-}
+  trigger: React.ReactNode;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+  className?: string;
+};
 
 export const SideSheet = ({
   trigger,
@@ -33,5 +33,5 @@ export const SideSheet = ({
         {children}
       </SheetContent>
     </Sheet>
-  )
-}
+  );
+};

@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from "next/image";
+import React from "react";
 
 export const PortalBanner = () => {
   return (
@@ -9,12 +9,12 @@ export const PortalBanner = () => {
         alt="LOGO"
         sizes="100vw"
         style={{
-          width: '100px',
-          height: 'auto',
+          width: "100px",
+          height: "auto",
         }}
         width={0}
         height={0}
       />
     </div>
-  )
-}
+  );
+};

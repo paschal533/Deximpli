@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const CopyIcon = (props: Props) => {
   return (
@@ -26,7 +26,7 @@ const CopyIcon = (props: Props) => {
         stroke-linejoin="round"
       />
     </svg>
-  )
-}
+  );
+};
 
-export default CopyIcon
+export default CopyIcon;

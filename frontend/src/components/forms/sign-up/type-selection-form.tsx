@@ -1,12 +1,12 @@
-import React from 'react'
-import { FieldValues, UseFormRegister } from 'react-hook-form'
-import UserTypeCard from './user-type-card'
+import React from "react";
+import { FieldValues, UseFormRegister } from "react-hook-form";
+import UserTypeCard from "./user-type-card";
 
 type Props = {
-  register: UseFormRegister<FieldValues>
-  userType: 'owner' | 'individaul'
-  setUserType: React.Dispatch<React.SetStateAction<'owner' | 'individaul'>>
-}
+  register: UseFormRegister<FieldValues>;
+  userType: "owner" | "individaul";
+  setUserType: React.Dispatch<React.SetStateAction<"owner" | "individaul">>;
+};
 
 const TypeSelectionForm = ({ register, setUserType, userType }: Props) => {
   return (
@@ -33,7 +33,7 @@ const TypeSelectionForm = ({ register, setUserType, userType }: Props) => {
         text="Looking to set up a personal account."
       />
     </>
-  )
-}
+  );
+};
 
-export default TypeSelectionForm
+export default TypeSelectionForm;

@@ -1,22 +1,25 @@
-import { useState, useEffect, useCallback, useContext } from 'react';
-import { ethers } from 'ethers';
-import { toast } from 'react-toastify';
-import FactoryABI from '@/contracts/PairFactory.json';
-import { TokenPairABI } from '@/utils/TokenPairABI';
-import { useEthersSigner } from '@/components/Wallet';
-import { getTokenInfo, getErrorMessage, toString, isETH } from '@/utils/Helper';
-import { ERC20ABI } from '@/utils/ERC20ABI';
-import AMMRouterABI from '@/contracts/AMMRouter.json';
-import { useAccount } from 'wagmi'
-import { getBalance } from '@wagmi/core'
-import { configConnect } from '@/blockchain/config';
-import { SwapContext } from '@/context/swap-provider';
-import { SuppotedPairFactoryContractAddress, SuppotedAMMRouterContractAddress } from '@/utils/Tokens';
+import { useState, useEffect, useCallback, useContext } from "react";
+import { ethers } from "ethers";
+import { toast } from "react-toastify";
+import FactoryABI from "@/contracts/PairFactory.json";
+import { TokenPairABI } from "@/utils/TokenPairABI";
+import { useEthersSigner } from "@/components/Wallet";
+import { getTokenInfo, getErrorMessage, toString, isETH } from "@/utils/Helper";
+import { ERC20ABI } from "@/utils/ERC20ABI";
+import AMMRouterABI from "@/contracts/AMMRouter.json";
+import { useAccount } from "wagmi";
+import { getBalance } from "@wagmi/core";
+import { configConnect } from "@/blockchain/config";
+import { SwapContext } from "@/context/swap-provider";
+import {
+  SuppotedPairFactoryContractAddress,
+  SuppotedAMMRouterContractAddress,
+} from "@/utils/Tokens";
 
 const useLiquidity = () => {
-  const { address, isConnecting, connector: activeConnector, } = useAccount()
-  const { provider } = useContext(SwapContext)
-  const signer = useEthersSigner()
+  const { address, isConnecting, connector: activeConnector } = useAccount();
+  const { provider } = useContext(SwapContext);
+  const signer = useEthersSigner();
   const [loading, setLoading] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
   const [liquidity, setLiquidity] = useState<any>([]);
@@ -35,7 +38,7 @@ const useLiquidity = () => {
   const [reserveB, setReserveB] = useState<any>(0);
   const [tokenA, setTokenA] = useState<any>({});
   const [tokenB, setTokenB] = useState<any>({});
-  const [pair, setPair] = useState<any>('');
+  const [pair, setPair] = useState<any>("");
   const [availableBalance, setAvailableBalance] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [tokenIndex, setTokenIndex] = useState<number>(0); // 0 = tokenA, 1 = tokenB
@@ -47,7 +50,11 @@ const useLiquidity = () => {
     setLoading(true);
     let tmpLiq = [];
     try {
-      let factory = new ethers.Contract(SuppotedPairFactoryContractAddress(provider?._network.chainId), FactoryABI.abi, signer);
+      let factory = new ethers.Contract(
+        SuppotedPairFactoryContractAddress(provider?._network.chainId),
+        FactoryABI.abi,
+        signer,
+      );
       // Fetch how many pairs are there in the DEX
       const nPairs = await factory.allPairsLength();
 
@@ -69,36 +76,56 @@ const useLiquidity = () => {
       console.error(error);
     }
     setLoading(false);
-  }, [address, signer, provider ]);
+  }, [address, signer, provider]);
 
-  const handleClick = (pair: any) => async (event :any, isExpanded : any) => {
+  const handleClick = (pair: any) => async (event: any, isExpanded: any) => {
     setExpanded(isExpanded ? pair.pairAddress : false);
     let lpToken = new ethers.Contract(pair.pairAddress, TokenPairABI, provider);
     let totalSupply = await lpToken.totalSupply();
-    let shareRatio = pair.balance / Number(ethers.utils.formatUnits(totalSupply, 18));
+    let shareRatio =
+      pair.balance / Number(ethers.utils.formatUnits(totalSupply, 18));
     setSharePercent(100 * shareRatio);
 
-    let [_reserveA, _reserveB,] = await lpToken.getReserves();
-    setPooledTokenA(Number(ethers.utils.formatUnits(_reserveA, pair.tokenA.decimals)) * shareRatio);
-    setPooledTokenB(Number(ethers.utils.formatUnits(_reserveB, pair.tokenB.decimals)) * shareRatio);
+    let [_reserveA, _reserveB] = await lpToken.getReserves();
+    setPooledTokenA(
+      Number(ethers.utils.formatUnits(_reserveA, pair.tokenA.decimals)) *
+        shareRatio,
+    );
+    setPooledTokenB(
+      Number(ethers.utils.formatUnits(_reserveB, pair.tokenB.decimals)) *
+        shareRatio,
+    );
   };
 
-  const setTokenInfo = useCallback(async (pairAddress : any) => {
-    if (tokensSelected) {
-      return;
-    }
-    try {
-      const tokenPair = new ethers.Contract(pairAddress, TokenPairABI, signer);
-      const _tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
-      const _tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
-      setTokenA(_tokenA);
-      setTokenB(_tokenB);
-      setTokenSelected(true);
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Cannot fetch token information for the pair!"), { toastId: 'PAIR_0' })
-      console.error(error);
-    }
-  }, [signer, tokensSelected, provider]);
+  const setTokenInfo = useCallback(
+    async (pairAddress: any) => {
+      if (tokensSelected) {
+        return;
+      }
+      try {
+        const tokenPair = new ethers.Contract(
+          pairAddress,
+          TokenPairABI,
+          signer,
+        );
+        const _tokenA = await getTokenInfo(await tokenPair.tokenA(), provider);
+        const _tokenB = await getTokenInfo(await tokenPair.tokenB(), provider);
+        setTokenA(_tokenA);
+        setTokenB(_tokenB);
+        setTokenSelected(true);
+      } catch (error) {
+        toast.error(
+          getErrorMessage(
+            error,
+            "Cannot fetch token information for the pair!",
+          ),
+          { toastId: "PAIR_0" },
+        );
+        console.error(error);
+      }
+    },
+    [signer, tokensSelected, provider],
+  );
 
   // Set reserves using token addresses(tokens information are known)
   const getReserves = useCallback(async () => {
@@ -106,14 +133,24 @@ const useLiquidity = () => {
       return;
     }
     try {
-      const ammRouter = new ethers.Contract(SuppotedAMMRouterContractAddress(provider?._network.chainId), AMMRouterABI.abi, signer);
-      const [_reserveA, _reserveB, _pairAddress] = await ammRouter.getReserves(tokenA.address, tokenB.address);
+      const ammRouter = new ethers.Contract(
+        SuppotedAMMRouterContractAddress(provider?._network.chainId),
+        AMMRouterABI.abi,
+        signer,
+      );
+      const [_reserveA, _reserveB, _pairAddress] = await ammRouter.getReserves(
+        tokenA.address,
+        tokenB.address,
+      );
       setPair(_pairAddress);
       setReserveA(ethers.utils.formatUnits(_reserveA, tokenA.decimals));
       setReserveB(ethers.utils.formatUnits(_reserveB, tokenB.decimals));
     } catch (error) {
-      toast.info("Looks you are the first one to provide liquidity for the pair.", { toastId: 'RESERVE_0' })
-      setPair('');
+      toast.info(
+        "Looks you are the first one to provide liquidity for the pair.",
+        { toastId: "RESERVE_0" },
+      );
+      setPair("");
       console.log(error);
     }
   }, [signer, tokenA, tokenB, tokensSelected, provider?._network.chainId]);
@@ -125,37 +162,51 @@ const useLiquidity = () => {
     try {
       if (isETH(tokenA, provider)) {
         const balance = await getBalance(configConnect, {
-            //@ts-ignore
-            address: address,
-            //@ts-ignore
-            chainId: provider?._network.chainId
-        })
-        const _balanceA = balance.value
+          //@ts-ignore
+          address: address,
+          //@ts-ignore
+          chainId: provider?._network.chainId,
+        });
+        const _balanceA = balance.value;
         setBalanceA(Number(ethers.utils.formatUnits(_balanceA)));
       } else {
         const _tokenA = new ethers.Contract(tokenA.address, ERC20ABI, provider);
         const _balanceA = await _tokenA.balanceOf(address);
-        setBalanceA(Number(ethers.utils.formatUnits(_balanceA, tokenA.decimals)));
+        setBalanceA(
+          Number(ethers.utils.formatUnits(_balanceA, tokenA.decimals)),
+        );
       }
       if (isETH(tokenB, provider)) {
         const balance = await getBalance(configConnect, {
-            //@ts-ignore
-            address: address,
-            //@ts-ignore
-            chainId: provider?._network.chainId
-        })
-        const _balanceB = balance.value
+          //@ts-ignore
+          address: address,
+          //@ts-ignore
+          chainId: provider?._network.chainId,
+        });
+        const _balanceB = balance.value;
         setBalanceB(Number(ethers.utils.formatUnits(_balanceB)));
       } else {
         const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, provider);
         const _balanceB = await _tokenB.balanceOf(address);
-        setBalanceB(Number(ethers.utils.formatUnits(_balanceB, tokenB.decimals)));
+        setBalanceB(
+          Number(ethers.utils.formatUnits(_balanceB, tokenB.decimals)),
+        );
       }
     } catch (error) {
-      toast.error(getErrorMessage(error, "Cannot get token balances!"), { toastId: 'BALANCE_0' });
+      toast.error(getErrorMessage(error, "Cannot get token balances!"), {
+        toastId: "BALANCE_0",
+      });
       console.log(error);
     }
-  }, [address, signer, tokenA, tokenB, provider, tokensSelected, provider?._network.chainId]);
+  }, [
+    address,
+    signer,
+    tokenA,
+    tokenB,
+    provider,
+    tokensSelected,
+    provider?._network.chainId,
+  ]);
 
   const checkAllowances = useCallback(async () => {
     if (!tokensSelected) {
@@ -166,7 +217,10 @@ const useLiquidity = () => {
         setAllowA(true);
       } else {
         const _tokenA = new ethers.Contract(tokenA.address, ERC20ABI, signer);
-        let _allowA = await _tokenA.allowance(address, SuppotedAMMRouterContractAddress(provider?._network.chainId));
+        let _allowA = await _tokenA.allowance(
+          address,
+          SuppotedAMMRouterContractAddress(provider?._network.chainId),
+        );
         _allowA = Number(ethers.utils.formatUnits(_allowA, tokenA.decimals));
         setAllowAmountA(_allowA);
         setAllowA(_allowA >= amountA);
@@ -175,7 +229,10 @@ const useLiquidity = () => {
         setAllowB(true);
       } else {
         const _tokenB = new ethers.Contract(tokenB.address, ERC20ABI, signer);
-        let _allowB = await _tokenB.allowance(address, SuppotedAMMRouterContractAddress(provider?._network.chainId));
+        let _allowB = await _tokenB.allowance(
+          address,
+          SuppotedAMMRouterContractAddress(provider?._network.chainId),
+        );
         _allowB = Number(ethers.utils.formatUnits(_allowB, tokenB.decimals));
         setAllowAmountB(_allowB);
         setAllowB(_allowB >= amountB);
@@ -184,10 +241,19 @@ const useLiquidity = () => {
       toast.error(getErrorMessage(error, "Cannot check allowances!"));
       console.error(error);
     }
-  }, [address, signer, tokenA, tokenB, amountA, amountB, tokensSelected, provider?._network.chainId]);
+  }, [
+    address,
+    signer,
+    tokenA,
+    tokenB,
+    amountA,
+    amountB,
+    tokensSelected,
+    provider?._network.chainId,
+  ]);
 
   useEffect(() => {
-    const pairAddress = ''; //searchParam.get('pair');
+    const pairAddress = ""; //searchParam.get('pair');
     if (address && pairAddress) {
       setTokenInfo(pairAddress);
       getReserves();
@@ -198,22 +264,35 @@ const useLiquidity = () => {
       getBalances();
       checkAllowances();
     }
-  }, [address, tokensSelected, provider?._network.chainId, checkAllowances, getBalances, getReserves, setTokenInfo]);
+  }, [
+    address,
+    tokensSelected,
+    provider?._network.chainId,
+    checkAllowances,
+    getBalances,
+    getReserves,
+    setTokenInfo,
+  ]);
 
-  const handleChange = (e : any) => {
+  const handleChange = (e: any) => {
     let tmpVal = e.target.value ? e.target.value : 0;
     let id = e.target.id;
     if (tmpVal < 0 || isNaN(tmpVal)) {
-      tmpVal = id === 'tokenA' ? amountA : amountB;
-    } else if (!(typeof tmpVal === 'string' && (tmpVal.endsWith(".") || tmpVal.startsWith(".")))) {
+      tmpVal = id === "tokenA" ? amountA : amountB;
+    } else if (
+      !(
+        typeof tmpVal === "string" &&
+        (tmpVal.endsWith(".") || tmpVal.startsWith("."))
+      )
+    ) {
       tmpVal = Number(e.target.value.toString());
     }
-    if (id === 'tokenA') {
+    if (id === "tokenA") {
       setAmountA(toString(tmpVal));
       let _amountB = amountB;
       if (pair) {
         //@ts-ignore
-        _amountB = (tmpVal * reserveB / reserveA).toFixed(2);
+        _amountB = ((tmpVal * reserveB) / reserveA).toFixed(2);
         setAmountB(toString(_amountB));
       }
       setAvailableBalance(tmpVal <= balanceA && _amountB <= balanceB);
@@ -224,22 +303,33 @@ const useLiquidity = () => {
       let _amountA = amountA;
       if (pair) {
         //@ts-ignore
-        _amountA = (tmpVal * reserveA / reserveB).toFixed(2);
+        _amountA = ((tmpVal * reserveA) / reserveB).toFixed(2);
         setAmountA(toString(_amountA));
       }
       setAvailableBalance(_amountA <= balanceA && tmpVal <= balanceB);
       setAllowA(isETH(tokenA, provider) || allowAmountA >= _amountA);
       setAllowB(isETH(tokenB, provider) || allowAmountB >= tmpVal);
     }
-  }
+  };
 
-  const handleApprove = async (index : any) => {
+  const handleApprove = async (index: any) => {
     setLoading(true);
-    const [token, amount] = index === indexTokenA ? [tokenA, amountA] : [tokenB, amountB];
+    const [token, amount] =
+      index === indexTokenA ? [tokenA, amountA] : [tokenB, amountB];
     try {
-      const tokenContract = new ethers.Contract(token.address, ERC20ABI, signer);
-      const allowAmount = ethers.utils.parseUnits(toString(amount), token.decimals);
-      const tx = await tokenContract.approve(SuppotedAMMRouterContractAddress(provider?._network.chainId), allowAmount);
+      const tokenContract = new ethers.Contract(
+        token.address,
+        ERC20ABI,
+        signer,
+      );
+      const allowAmount = ethers.utils.parseUnits(
+        toString(amount),
+        token.decimals,
+      );
+      const tx = await tokenContract.approve(
+        SuppotedAMMRouterContractAddress(provider?._network.chainId),
+        allowAmount,
+      );
       await tx.wait();
       toast.info(`${token.symbol} is enabled!`);
       if (index === indexTokenA) {
@@ -252,31 +342,55 @@ const useLiquidity = () => {
       console.error(error);
     }
     setLoading(false);
-  }
+  };
 
   const handleAddLiquidity = async () => {
     setLoading(true);
     try {
-      const ammRouter = new ethers.Contract(SuppotedAMMRouterContractAddress(provider?._network.chainId), AMMRouterABI.abi, signer);
+      const ammRouter = new ethers.Contract(
+        SuppotedAMMRouterContractAddress(provider?._network.chainId),
+        AMMRouterABI.abi,
+        signer,
+      );
       //@ts-ignore
-      const deadline = parseInt(new Date().getTime() / 1000) + 30
+      const deadline = parseInt(new Date().getTime() / 1000) + 30;
       let tx;
       if (isETH(tokenA, provider)) {
-        tx = await ammRouter.addLiquidityETH(tokenB.address,
-          ethers.utils.parseUnits(toString(amountB), tokenB.decimals), 0, 0, address, deadline,
-          { value: ethers.utils.parseUnits(toString(amountA)) });
+        tx = await ammRouter.addLiquidityETH(
+          tokenB.address,
+          ethers.utils.parseUnits(toString(amountB), tokenB.decimals),
+          0,
+          0,
+          address,
+          deadline,
+          { value: ethers.utils.parseUnits(toString(amountA)) },
+        );
       } else if (isETH(tokenB, provider)) {
-        tx = await ammRouter.addLiquidityETH(tokenA.address,
-          ethers.utils.parseUnits(toString(amountA), tokenA.decimals), 0, 0, address, deadline,
-          { value: ethers.utils.parseUnits(toString(amountB)) });
+        tx = await ammRouter.addLiquidityETH(
+          tokenA.address,
+          ethers.utils.parseUnits(toString(amountA), tokenA.decimals),
+          0,
+          0,
+          address,
+          deadline,
+          { value: ethers.utils.parseUnits(toString(amountB)) },
+        );
       } else {
-        tx = await ammRouter.addLiquidity(tokenA.address, tokenB.address,
+        tx = await ammRouter.addLiquidity(
+          tokenA.address,
+          tokenB.address,
           ethers.utils.parseUnits(toString(amountA), tokenA.decimals),
           ethers.utils.parseUnits(toString(amountB), tokenB.decimals),
-          0, 0, address, deadline);
+          0,
+          0,
+          address,
+          deadline,
+        );
       }
       await tx.wait();
-      toast.info(`Liquidity provisioning succeeded! Transaction Hash: ${tx.hash}`);
+      toast.info(
+        `Liquidity provisioning succeeded! Transaction Hash: ${tx.hash}`,
+      );
       setAmountA(0);
       setAmountB(0);
       await getBalances();
@@ -286,9 +400,9 @@ const useLiquidity = () => {
       console.error(error);
     }
     setLoading(false);
-  }
+  };
 
-  const handleSelectToken = (token : any) => {
+  const handleSelectToken = (token: any) => {
     if (tokenIndex === indexTokenA && token.address !== tokenB.address) {
       setTokenA(token);
       setAmountA(0);
@@ -300,40 +414,44 @@ const useLiquidity = () => {
     } else {
       toast.error("Please select a different token!");
     }
-  }
+  };
 
-  const getPrice = (index : any) => {
-    const [reserve0, reserve1] = index === 0 ? [reserveA, reserveB] : [reserveB, reserveA];
-    const [amount0, amount1] = index === 0 ? [amountA, amountB] : [amountB, amountA];
+  const getPrice = (index: any) => {
+    const [reserve0, reserve1] =
+      index === 0 ? [reserveA, reserveB] : [reserveB, reserveA];
+    const [amount0, amount1] =
+      index === 0 ? [amountA, amountB] : [amountB, amountA];
     const ret = pair ? reserve1 / reserve0 : amount1 / amount0;
     return isNaN(ret) ? "N/A" : ret.toFixed(4);
-  }
+  };
 
   const getSharePercent = () => {
-    let sharePercent = 100 * Number(amountA) / (Number(amountA) + Number(reserveA));
-    return isNaN(sharePercent) || sharePercent < 0.01 ? "< 0.01" : sharePercent.toFixed(2)
-  }
+    let sharePercent =
+      (100 * Number(amountA)) / (Number(amountA) + Number(reserveA));
+    return isNaN(sharePercent) || sharePercent < 0.01
+      ? "< 0.01"
+      : sharePercent.toFixed(2);
+  };
 
   useEffect(() => {
     getLiquidity();
   }, [getLiquidity]);
 
-
-    return {
-     loading, 
-     expanded,  
-     liquidity,
-     sharePercent,
-     pooledTokenA,  
-     pooledTokenB,
-     handleClick,
-     address,
-     tokenA, 
-    handleChange, 
-    tokenB, 
-    amountA, 
-    amountB, 
-    balanceA, 
+  return {
+    loading,
+    expanded,
+    liquidity,
+    sharePercent,
+    pooledTokenA,
+    pooledTokenB,
+    handleClick,
+    address,
+    tokenA,
+    handleChange,
+    tokenB,
+    amountA,
+    amountB,
+    balanceA,
     balanceB,
     tokensSelected,
     getPrice,
@@ -351,7 +469,7 @@ const useLiquidity = () => {
     getReserves,
     getBalances,
     checkAllowances,
-    };
-}
+  };
+};
 
 export default useLiquidity;

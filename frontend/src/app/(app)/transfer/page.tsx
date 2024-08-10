@@ -1,19 +1,18 @@
-import InfoBar from '@/components/infobar'
-import TransferTabs from '@/components/transfer/tabs'
-import React from 'react'
+import InfoBar from "@/components/infobar";
+import TransferTabs from "@/components/transfer/tabs";
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const Page = async (props: Props) => {
-
   return (
     <>
       <InfoBar />
       <div className="w-full align-middle place-content-center justify-center items-center flex">
-       <TransferTabs />
+        <TransferTabs />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;
