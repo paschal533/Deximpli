@@ -24,7 +24,7 @@ import {
 } from "viem/chains";
 
 function AccountDetails() {
-  const { address, signer, currentChainId } = useContext(SwapContext);
+  const { address, signer, currentChainId, provider } = useContext(SwapContext);
 
   const [balance, setBalance] = useState<number>(0);
   const [authenticated, setAuthenticated] = useState<any>();
@@ -51,12 +51,15 @@ function AccountDetails() {
 
         if (_authenticated?.status == 200) {
           const client = getPublicClient(publicClient, {
-            chainId: currentChainId,
+            //@ts-ignore
+            chainId: provider?._network.chainId,
           });
 
           let balance = await client.getBalance({
             //@ts-ignore
-            address: _authenticated.authenticated?.contractAddress,
+            address: _authenticated.authenticated?.contractAddress?.trim(),
+            //@ts-ignore
+            chainId: provider?._network.chainId,
           });
 
           const balanceAsEther = formatEther(balance);

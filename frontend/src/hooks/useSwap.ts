@@ -455,6 +455,7 @@ const useSwap = () => {
           Number(
             ethers.utils.formatUnits(
               reserveA,
+              //@ts-ignore
               graph.get(path[i]).token.decimals,
             ),
           )) /
@@ -462,6 +463,7 @@ const useSwap = () => {
         Number(
           ethers.utils.formatUnits(
             reserveB,
+            //@ts-ignore
             graph.get(path[i + 1]).token.decimals,
           ),
         );

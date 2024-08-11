@@ -118,7 +118,7 @@ function ListStake() {
                                 ? "Expired"
                                 : currentBlock >= item.rewardStartBlock
                                   ? `Ends in ${Number(item.rewardEndBlock) - Number(currentBlock)} block(s)`
-                                  : `Starts in ${item.rewardStartBlock - currentBlock} block(s)`}
+                                  : `Starts in ${Number(item.rewardStartBlock) - Number(currentBlock)} block(s)`}
                             </Grid>
                           </div>
                         </div>
